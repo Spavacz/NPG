@@ -1,0 +1,52 @@
+<script type="text/javascript">
+<!--
+$(document).ready(function(){
+	$('#article-form').validate();
+	$('#article-form').submit( function(e){
+		e.stopPropagation();
+		if( $('#article-form').valid() ) {
+			$('#description').val( CKEDITOR.instances.description.getData() );
+			$('#text').val( CKEDITOR.instances.text.getData() );
+			var result = client['article.edit']('<?=$this->id?>', $('#article-form').serializeArray());
+			if(client.error) {
+				showError('Zapis nie powiódł się :(');
+				return false;
+				/*error_message = jQuery.parseJSON(client.error_message);
+				for( var field in error_message ) {
+					for( var error in error_message[field] ) {
+						$('input[name=name]');
+					} 
+				}*/
+			} else {
+				//showSuccess(result);
+				document.location.href = '<?=$this->baseUrl('cms/articles')?>';
+			}
+		} else {
+			showError('Wypełnij poprawnie formularz');
+		}				
+		return false;
+	});
+	$('#cancel').click( function(e) {
+		confirm('Uwaga! zmiany nie zostana zapisane.', function() {
+			document.location.href = '<?=$this->baseUrl('cms/articles')?>';
+		});
+	});
+});	
+//-->
+</script>
+<div class="innerdiv clear">
+	<!-- Tabs -->
+	<h2 class="head-alt-white">Edycja artykułu</h2>
+	<ul class="tabs">
+		<li><a href="<?=$this->baseUrl('cms/articles')?>">Lista</a></li>
+		<li><a href="<?=$this->baseUrl('cms/articles/add')?>">Dodaj nowy</a></li>
+	</ul>
+	<div class="innercontent">
+		<!-- tab "panes" -->
+		<div class="panes">
+			<div style="display: block;">
+				<?=$this->form?>
+			</div>
+		</div>
+	</div>
+</div>

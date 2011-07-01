@@ -1,0 +1,37 @@
+<div id="main-menu">
+	<!--<ul>
+		<li><a href="<?php echo $this->baseUrl('/'); ?>">Sprzedaż</a></li>
+		<li><a href="<?php echo $this->baseUrl('wynajem'); ?>">Wynajem</a></li>
+		<li><a href="<?php echo $this->baseUrl('agenci'); ?>">Agenci</a></li>
+		<li><a href="<?php echo $this->baseUrl('kupuj-z-nami'); ?>">Kupuj z nami</a></li>
+		<li><a href="<?php echo $this->baseUrl('lokale'); ?>">Lokale</a></li>
+		<li><a href="<?php echo $this->baseUrl('o-nas'); ?>">O nas</a></li>
+	</ul>-->
+	<?php
+	echo $this->navigation()->menu()
+		->setOnlyActiveBranch(false)
+		->setRenderParents(true)
+		->setUlClass('navigation')
+		->render();
+	?>
+</div>
+<div id="breadcrumbs">
+	<a href="<?php echo $this->baseUrl('/'); ?>" title="Strona Główna"><img src="<?php echo $this->baseUrl('images/house.png'); ?>" alt="Strona główna"/></a> &#9654;
+	<?php
+	echo $this->navigation()->breadcrumbs()
+		->setRenderInvisible(true)
+		->setMinDepth(0)
+		->setSeparator(' &#9654;' . PHP_EOL); // cool separator with newline->render();
+	?>
+</div>
+<script type="text/javascript">
+	$(function () {
+		$('ul.navigation ul').each(function () {
+			$(this).parent().eq(0).hover(function () {
+				$('ul:eq(0)', this).show();
+			}, function () {
+				$('ul:eq(0)', this).hide();
+			});
+		});
+	});
+</script>

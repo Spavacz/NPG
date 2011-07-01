@@ -1,0 +1,22 @@
+<div class="agents-mini">
+    <h1>Nasi Agenci</h1>
+    <ul>
+        <?php foreach($this->agents as $agent):
+        ?>
+            <li>
+                <a class="agents-img-mini" href="<?php echo $this->baseUrl('agenci#' . urlencode($agent->getSurname())); ?>">
+                    <img src="<?php echo $agent->getPhoto('thumbs'); ?>" alt="<?php echo $agent->getName(true); ?>"/>
+                </a>
+                <h2>
+                    <a href="<?php echo $this->baseUrl('agenci#' . urlencode($agent->getSurname())); ?>">
+                        <?php echo $agent->getName(true); ?>
+                    </a>
+                </h2><br/>
+                <?php if($agent->getPhone()) : ?>
+                    telefon: <?php echo $agent->getPhone(); ?><br/>
+                <?php endif; ?>
+                email: <?php echo $agent->getEmail(); ?>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+</div>

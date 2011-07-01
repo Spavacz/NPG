@@ -1,0 +1,321 @@
+<?php
+
+function drawList($parent)
+{
+	echo '<ul>';
+	// subcategories
+	foreach ($parent->getChildren() as $category)
+	{
+		echo "<li id=\"category_{$category->getId()}\"><a href=\"#\">{$category->getName()}</a>";
+		drawList($category);
+		echo "</li>";
+	}
+	// locals
+	foreach ($parent->getLocals() as $local)
+	{
+		echo "<li id=\"local_{$local->getId()}\" rel=\"leaf\"><a href=\"#\">{$local->getName()}</a></li>";
+	}
+	echo '</ul>';
+}
+?>
+
+<script type="text/javascript">
+	$(function () {
+		function loadCategoryForm(id) {
+			if(typeof(id) == 'undefined') {
+				document.getElementById('category-form').reset(); // clear form
+				$('#category-form>textarea[name|="description"]').val('');
+				$('#category-form>div>img').attr('src', '<?php echo $this->baseUrl('admin/images/icons/category.png'); ?>');
+				$('#category-form>input[name|="image"]').val('');
+				$('#category-form>input[name|="idParent"]').val(activeId);
+				$('#category-form>input[name|="id"]').val('');
+			} else {
+				jQuery.getJSON( '<?php echo $this->baseUrl('rest/categories/id'); ?>/' + id, function(data) {
+					if(data.success) {
+						document.getElementById('category-form').reset(); // clear form
+						var categoryData = data.data;
+						$('#category-form>input[name|="id"]').val(categoryData.id);
+						$('#category-form>input[name|="idParent"]').val(categoryData.idParent);
+						$('#category-form>input[name|="name"]').val(categoryData.name);
+						$('#category-form>textarea[name|="description"]').val(categoryData.description);
+						$('#category-form>div>input[name|="image"]').val(categoryData.image);
+						$('a.image-modal', '#category-form').attr('href',categoryData.image);
+						if(categoryData.image != null) {
+							$('#category-form>div>img').attr('src', categoryData.image.replace('/obrazy/','/_thumbs/obrazy/'));
+						} else {
+							$('#category-form>div>img').attr('src', '<?php echo $this->baseUrl('admin/images/icons/category.png'); ?>');
+						}
+					} else {
+						showError('Nie udało się wczytać kategorii');
+					}
+				});
+			}
+		}
+
+		function loadLocalForm(id) {
+			if(typeof(id) == 'undefined') {
+				document.getElementById('local-form').reset(); // clear form
+				$('#local-form>textarea[name|="description"]').val('');
+				$('#local-form>div>img').attr('src', '<?php echo $this->baseUrl('admin/images/icons/local.png'); ?>');
+				$('#local-form>div>input[name|="image"]').val('');
+				$('#local-form>input[name|="idCategory"]').val(activeId);
+				$('#local-form>input[name|="id"]').val('');
+			} else {
+				jQuery.getJSON( '<?php echo $this->baseUrl('rest/locals/id'); ?>/' + id, function(data) {
+					if(data.success) {
+						document.getElementById('local-form').reset(); // clear form
+						var localData = data.data;
+						$('#local-form>input[name|="id"]').val(localData.id);
+						$('#local-form>input[name|="idCategory"]').val(localData.idCategory);
+						$('#local-form>input[name|="name"]').val(localData.name);
+						$('#local-form>input[name|="www"]').val(localData.www);
+						$('#local-form>textarea[name|="address"]').val(localData.address);
+						$('#local-form>textarea[name|="description"]').val(localData.description);
+						$('#local-form>div>input[name|="image"]').val(localData.image);
+						$('a.image-modal', '#local-form').attr('href', localData.image);
+						if(localData.image != null) {
+							$('#local-form>div>img').attr('src', localData.image.replace('/obrazy/','/_thumbs/obrazy/'));
+						} else {
+							$('#local-form>div>img').attr('src', '<?php echo $this->baseUrl('admin/images/icons/local.png'); ?>');
+						}
+					} else {
+						showError( 'Nie udało się wczytać lokalu');
+					}
+				});
+			}
+		}
+
+
+		var activeForm = null;
+		var activeId = 0;
+		var activeType = 'category';
+		$("#localtree").bind("select_node.jstree", function (e, data) {
+			var id = data.rslt.obj[0].id;
+			if(activeForm !== null) activeForm.fadeOut();
+			if( id.indexOf('category_') != -1 ) {
+				id = id.substr(9);
+				loadCategoryForm(id);
+				activeForm = $('#categoryFormC');
+				activeId = id;
+				activeType = 'category';
+			} else if ( id.indexOf('local_') != -1 ) {
+				id = id.substr(6);
+				loadLocalForm(id);
+				activeForm = $('#localFormC');
+				activeId = id;
+				activeType = 'local';
+			}
+			activeForm.fadeIn();
+		}).jstree({
+			"ui" : {
+				"select_limit" : 1
+			},
+			"types" : {
+				"types" : {
+					"leaf" : {
+						"icon" : {
+							"image" : "<?php echo $this->baseUrl('images/house.png'); ?>"
+						}
+					}
+				}
+			},
+			"plugins" : [ "themes", "html_data", "ui", "types" ]
+		});
+
+		$('.ckeditor-basic').ckeditor({toolbar: 'Basic', height: '100px'});
+	
+		finder = new CKFinder();
+		finder.basePath = '<?= $this->baseUrl('js/ckfinder') ?>';
+		
+		$('.add-image').click(function(e) {
+			finder.popup();
+			return false;
+		});
+
+		$('#category-form').submit(function(e) {
+			if($('#category-form>input[name|="name"]').val() == '') {
+				showWarning('Podaj przynajmniej nazwę kategorii');
+			} else {
+				jQuery.post( '<?php echo $this->baseUrl('rest/categories'); ?>', $(this).serializeArray(), function(data) {
+					if(data.success) {
+						// sprawdzam czy edycja czy nowy
+						var node = $("#localtree").jstree("get_selected");
+						// jesli wstawiany do korzenia - node to cale drzewo
+						if(node.length == 0) {
+							node = $('#localtree');
+						}
+						if($('#category-form>input[name|="id"]').val() == '') {
+							// nowy
+							$('#localtree').jstree('create_node', node, 'last', {
+								'attr' : {
+									'id' : 'category_' + data.data.id
+								},
+								'data' : $('#category-form>input[name|="name"]').val()
+							});
+						} else {
+							// edycja - conajwyzej zmiana nazwy
+							$("#localtree").jstree('rename_node', node, $('#category-form>input[name|="name"]').val());
+						}
+						document.getElementById('category-form').reset(); // clear form
+						$('#categoryFormC').fadeOut();
+						showSuccess('Kategoria została zapisana');
+					} else {
+						showError( 'Nie udało się zapisać kategorii');
+					}
+				});
+			}
+			return false;
+		});
+
+		$('#local-form').submit(function(e) {
+			if($('#local-form>input[name|="name"]').val() == '') {
+				showWarning('Podaj przynajmniej nazwę lokalu');
+			} else {
+				jQuery.post( '<?php echo $this->baseUrl('rest/locals'); ?>', $(this).serializeArray(), function(data) {
+					if(data.success) {
+						// sprawdzam czy edycja czy nowy
+						var node = $("#localtree").jstree("get_selected");
+						if($('#local-form>input[name|="id"]').val() == '') {
+							// nowy
+							$('#localtree').jstree('create_node', node, 'last', {
+								'attr' : {
+									'id' : 'local_' + data.data.id,
+									'rel' : 'leaf'
+								},
+								'data' : $('#local-form>input[name|="name"]').val()
+							});
+						} else {
+							// edycja - conajwyzej zmiana nazwy
+							$("#localtree").jstree('rename_node', node, $('#local-form>input[name|="name"]').val());
+						}
+						document.getElementById('local-form').reset(); // clear form
+						$('#localFormC').fadeOut();
+						showSuccess('Lokal został zapisany');
+					} else {
+						showError( 'Nie udało się zapisać lokalu');
+					}
+				});
+			}
+			return false;
+		});
+
+		$('#add-category').click(function(e) {
+			if(activeType == 'category') {
+				if(activeForm !== null) activeForm.fadeOut();
+				loadCategoryForm();
+				activeForm = $('#categoryFormC');
+				activeForm.fadeIn();
+			}
+			return false;
+		});
+
+		$('#add-local').click(function(e) {
+			if(activeType == 'category' && activeId > 0) {
+				if(activeForm !== null) activeForm.fadeOut();
+				loadLocalForm();
+				activeForm = $('#localFormC');
+				activeForm.fadeIn();
+			}
+			return false;
+		});
+
+		$('#delete-category').click(function(e) {
+			// tylko podczas edycji
+			var id = $('#category-form>input[name|="id"]').val();
+			if(id != '') {
+				confirm('Czy napewno usunąć kategorię?', function() {
+					jQuery.post( '<?php echo $this->baseUrl('rest/categories');?>',
+						{
+							'_method' : 'DELETE',
+							'id' : id
+						},
+						function(data) {
+							if(data.success) {
+								var node = $('#localtree').jstree('get_selected');
+								$('#localtree').jstree('delete_node', node);
+								showSuccess('Kategoria została usunięta');
+							} else {
+								showError( 'Nie udało się usunąć kategorii');
+							}
+						}
+					);
+				});
+			}
+			return false;
+		});
+
+		$('#delete-local').click(function(e) {
+			// tylko podczas edycji
+			var id = $('#local-form>input[name|="id"]').val();
+			if(id != '') {
+				confirm('Czy napewno usunąć lokal?', function() {
+					jQuery.post( '<?php echo $this->baseUrl('rest/locals');?>',
+						{
+							'_method' : 'DELETE',
+							'id' : id
+						},
+						function(data) {
+							if(data.success) {
+								var node = $('#localtree').jstree('get_selected');
+								$('#localtree').jstree('delete_node', node);
+								showSuccess('Lokal został usunięty')
+							} else {
+								showError( 'Nie udało się usunąć lokalu');
+							}
+						}
+					);
+				});
+			}
+			return false;
+		});
+	});
+</script>
+
+<div class="innerdiv trio clear floatleft">
+	<!-- Tabs -->
+	<h2 class="head-alt-white">Lokacje</h2>
+	<ul class="tabs">
+		<li><a id="add-category" href="#add-category">Dodaj kategorię</a></li>
+		<li><a id="add-local" href="#add-local">Dodaj lokacje</a></li>
+	</ul>
+	<div class="innercontent">
+		<!-- tab "panes" -->
+		<div class="panes">
+			<div  id="localtree" style="display: block;">
+<?php drawList($this->treeRoot); ?>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="categoryFormC" class="innerdiv trio2 floatright display-none">
+	<!-- Tabs -->
+	<h2 class="head-alt-white">Kategoria</h2>
+	<ul class="tabs">
+		<li><a id="delete-category" href="#delete-category">Usuń kategorię</a></li>
+	</ul>
+	<div class="innercontent">
+		<!-- tab "panes" -->
+		<div class="panes">
+			<div style="display: block;">
+<?php echo $this->categoryForm; ?>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="localFormC" class="innerdiv trio2 floatright display-none">
+	<!-- Tabs -->
+	<h2 class="head-alt-white">Lokacja</h2>
+	<ul class="tabs">
+		<li><a id="delete-local" href="#delete-local">Usuń lokację</a></li>
+	</ul>
+	<div class="innercontent">
+		<!-- tab "panes" -->
+		<div class="panes">
+			<div style="display: block;">
+<?php echo $this->localForm; ?>
+			</div>
+		</div>
+	</div>
+</div>

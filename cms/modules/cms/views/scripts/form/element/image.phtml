@@ -1,0 +1,49 @@
+<?php
+$rand = rand(1,1000);
+$image = $this->element->getValue();
+if(empty($image)) {
+	$image = '';
+	$image_thumb = $this->baseUrl($this->element->getDefault());
+} else {
+	$image_thumb = str_replace('/obrazy/', '/_thumbs/obrazy/', $image);
+}
+$name = $this->element->getName();
+?>
+<div class="imageInput" id="imageInput_<?php echo $rand; ?>">
+	<input type="hidden" name="<?=$name;?>" value="<?=$image;?>"/>
+	<?php if($this->element->getModal()): ?>
+		<ul style="display: none;">
+			<li>
+				<a id="imageModal_<?php echo $rand;?>" class="image-modal" href="<?=$this->baseUrl($image);?>">Powiększ</a>
+				<a id="add-image-<?php echo $rand;?>" class="confirm-image-add add-image" href="#add-image">Zmień</a>
+			</li>
+		</ul>
+	<?php else : ?>
+		<a id="add-image-<?php echo $rand;?>" class="confirm-image-delete" href="#add-image">Zmień</a>
+		<a id="remove-image-<?php echo $rand;?>" class="confirm-image-remove" href="#remove-image">Usuń</a>
+	<?php endif; ?>
+	<img alt="image" src="<?=$this->baseUrl($image_thumb);?>">
+</div>
+<script type="text/javascript">
+	$(document).ready(function(){
+		finder.selectActionFunction = function(filename) {
+			var thumb_filename = filename.replace('/obrazy/', '/_thumbs/obrazy/');
+			$('input[type="hidden"]', finderTarget).val(filename);
+			$('img', finderTarget).attr('src', thumb_filename);
+			$('a.image-modal', finderTarget).attr('href', filename);
+			$('a.image-modal', finderTarget).click(function (e) {
+				e.preventDefault();
+				show_image(this.href);
+			});
+		};
+		$('#add-image-<?php echo $rand;?>').click(function(e) {
+			finderTarget = $('#imageInput_<?php echo $rand;?>');
+			finder.popup();
+			return false;
+		});
+		$('#remove-image-<?php echo $rand;?>').click(function(e) {
+			$('#imageInput_<?php echo $rand; ?>>input').val('');
+			$('#imageInput_<?php echo $rand; ?>>img').attr('src', '<?=$this->baseUrl($this->element->getDefault())?>');
+		})
+	});
+</script>

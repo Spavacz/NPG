@@ -1,0 +1,71 @@
+<div class="innerdiv clear">
+	<!-- Tabs -->
+	<h2 class="head-alt-white">Artykuły</h2>
+	<ul class="tabs">
+		<li><a class="current" href="<?=$this->baseUrl('cms/articles')?>">Lista</a></li>
+		<li><a href="<?=$this->baseUrl('cms/articles/add')?>">Dodaj nowy</a></li>
+	</ul>
+	<div class="innercontent">
+		<!-- tab "panes" -->
+		<div class="panes">
+			<div style="display: block;">
+				<table id="article-list" class="full"></table>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+<!--
+	$('#article-list').zGrid({
+		url: '/rest/articles',
+		pageTotal: <?=$this->pageTotal?>,
+		pageLimit: <?=$this->pageLimit?>,
+		checkboxes: true,
+		controls: true,
+		paginator: true,
+		pageTag: 'page',
+		sortable: true,
+		sortTag: 'sort',
+		cols: [{
+			label: 'Tytuł',
+			id: 'name',
+			type: 'head',
+			sortable: true
+		}],
+		bulk: [{
+			label: 'Usuń',
+			action: 'delete'
+		}],
+		onLoad: function(){
+			$('.delete-btn').click( function(e){
+				e.stopPropagation();
+				confirm( 'usuwamy?', function() {
+					deleteArticle(e.currentTarget.name);
+				});
+				return false;
+			});
+		},
+		onBulk: function( action, selected ){
+			if( action == 'delete' ) {
+				confirm( 'usuwamy?', function() {
+					selected.each(function(i, chk) {
+						deleteArticle(chk.value);
+					});
+				});
+			}
+		}
+	});
+
+	function deleteArticle(id) {
+		var result = client['article.delete'](id);
+		if(client.error) {
+			showError('Usunięcie nie powiódło się :(');
+		} else {
+			//window.location.reload();
+			$('#article-list').zGridDeleteRow(id);
+			showSuccess(result);
+		}
+	}
+//-->
+</script>

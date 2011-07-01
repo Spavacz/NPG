@@ -1,0 +1,23 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<style>
+			body{font-family: Verdana,Tahoma,Arial,Helvetica,sans-serif;}
+		</style>
+	</head><body>
+		<h2>Kontakt ze strony www.npg.pl</h2>
+
+		<p><b><?php echo $this->name . ' ' . $this->surname; ?></b> korzystając z formularza na stroninie www.npg.pl/napisz-do-nas wysłał wiadomość:</p>
+		<p style="margin: 10px;font-style: italic;"><?php echo $this->message; ?></p>
+
+		<h3>Pełne informacje o kontakcie</h3>
+		<table>
+			<tr><td>Imię</td><td><?php echo $this->name; ?></td></tr>
+			<tr><td>Nazwisko</td><td><?php echo $this->surname; ?></td></tr>
+			<tr><td>E-mail</td><td><a href="mailto:<?php echo $this->email; ?>" title="e-mail"><?php echo $this->email; ?></a></td></tr>
+			<tr><td>Telefon</td><td><?php echo $this->phone; ?></td></tr>
+			<tr><td>Adres</td><td><?php echo $this->address; ?></td></tr>
+			<tr><td>Miasto</td><td><?php echo $this->city; ?></td></tr>
+		</table>
+</html>

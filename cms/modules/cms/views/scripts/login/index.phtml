@@ -1,0 +1,34 @@
+<div id="login">
+	<h2 class="head-alt">Logowanie</h2>
+	<ul class="tabs">
+		<li><a href="#">Login</a></li>
+		<li><a href="#">Zapomniałeś hasła ?</a></li>
+	</ul>
+	<div class="panes">
+		<div>
+			<form id="login-form" name="login" action="#login" method="post">
+				<fieldset>
+					<legend>Podaj swój email i hasło</legend>
+					<label for="username">Email:</label><input id="iLogin" name="login" type="text" />
+					<label for="password">Hasło:</label><input id="iPassword" name="password" type="password" />
+					<input type="checkbox" name="rememberme"/><label class="checkbox" for="rememberme">zapamietaj&nbsp;mnie&nbsp;w&nbsp;tej&nbsp;przeglądarce</label>
+					<input class="button" type="submit" value="Log in!" /><div class="clear"></div>
+				</fieldset>
+			</form>
+			<div id="validation-summary"></div>
+		</div>
+		<div>
+			<form action="#password" method="post">
+				<fieldset>
+				<legend>Give us your email then we post your password!</legend>
+				<label for="email">Email:</label><input id="email" name="email" type="text" />
+
+				<input class="button pink" type="submit" value="Recover" />
+				</fieldset>
+			</form>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+$('#iLogin').focus();
+</script>

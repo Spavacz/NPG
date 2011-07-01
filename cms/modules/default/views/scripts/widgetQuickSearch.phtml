@@ -1,0 +1,214 @@
+
+<div id="type-select" class="<?php echo $this->type; ?>">
+	<a href="<?php echo $this->baseUrl('/'); ?>" class="type-select"></a>
+	<a href="<?php echo $this->baseUrl('wynajem'); ?>" class="type-select"></a>
+</div>
+
+<h1>Szybka Wyszukiwarka</h1>
+<div>
+		Wybierz lokację
+	<ul class="qs-cat-ls">
+		<?php foreach ($this->categories as $category): ?>
+			<li>
+				<a id="qs_cat_open_<?php echo $category->getId(); ?>" class="qs-cat-open" href="#<?php echo $category->getName(); ?>"
+				   title="Wybierz lokacje"><?php echo $category->getName(); ?></a>
+				<ul id="qs_cat_ls_<?php echo $category->getId(); ?>" class="qs-cat-all">
+					<li>
+					<?php $id = $category->getId();
+					$name = $category->getName(); ?>
+					<input type="checkbox" id="qs_cat_<?php echo $id; ?>"
+						   value="<?php echo $id; ?>" name="<?php echo $name; ?>"/>
+					<label for="qs_cat_<?php echo $id; ?>"><strong><?php echo $name; ?></strong></label>
+					<ul class="qs-subcat-ls">
+						<?php foreach ($category->getChildren() as $child): ?>
+                            <?php $id = $child->getId();
+							    $name = $child->getName(); ?>
+							<li>
+								<input type="checkbox" id="qs_cat_<?php echo $id; ?>"
+									   value="<?php echo $id; ?>" name="<?php echo $name; ?>"/>
+								<label for="qs_cat_<?php echo $id; ?>"><?php echo $name; ?></label>
+							</li>
+                        <?php endforeach; ?>
+						</ul>
+					</li>
+				</ul>
+			</li>
+	    <?php endforeach; ?>
+							</ul>
+								lub zacznij wpisywać
+							<div id="textboxlist"></div>
+						</div>
+						<form name="quick-search-form" method="GET" action="<?php echo $this->baseUrl('json/products/autocomplete'); ?>">
+							<div>Cena
+								<input class="small" type="text" name="price_min"/> do <input class="small" type="text" name="price_max"/>
+							</div>
+							<div>Ilość pokoi
+								<input class="small" type="text" name="rooms_min"/> do <input class="small" type="text" name="rooms_max"/>
+							</div>
+						</form>
+						<h2 class="quick-search-results">Ofert: <span><?php echo $this->totalCount; ?></span>
+							<a id="quick-search-submit" href="<?php echo $this->baseUrl('oferty-' . ($this->type == 'sale' ? 'sprzedazy' : 'wynajmu') . '/'); ?>">pokaz wyniki</a>
+						</h2>
+
+						<script type="text/javascript">
+							var timer;
+							function delayFunction(callback, delay) {
+								if (timer) {
+									window.clearTimeout(timer);
+								}
+								timer = window.setTimeout( function() {
+									timer = null;
+									callback();
+								}, delay );
+	}
+	$(function(){
+		function changeCategory(cat) {
+			if(cat.checked) {
+				tl.add(cat.name,cat.value);
+			} else {
+				tl.findBit(cat.value).remove();
+			}
+		}
+		$('.qs-subcat-ls>li>input:checkbox').change(function(){
+			changeCategory(this);
+		});
+		$('.qs-cat-all>li>input:checkbox').change(function(){
+			var input = this;
+			$('li>input:checkbox', $(this).siblings('ul')).each(function() {
+				if(this.checked != input.checked) {
+					this.checked = input.checked;
+					changeCategory(this);
+				}
+			});
+		});
+		tl = new $.TextboxList('#textboxlist', {
+			unique: true,
+			bitsOptions: {
+				editable: {
+					growing: false
+				}
+			},
+			plugins: {
+				autocomplete: {
+					placeholder: 'Zacznij wpisywać aby uzyskać podpowiedź',
+					minLength: 3,
+					onlyFromValues: true,
+					queryRemote: true,
+					remote: {
+						url: '<?php echo $this->baseUrl('json/categories/autocomplete'); ?>'
+					}
+				}
+			}
+		});
+		tl.addEvent('bitRemove', function(bit){
+			var id = bit.getValue()[0];
+			$('#qs_cat_' + id).attr('checked', false);
+			submitQuickSearch();
+		});
+		tl.addEvent('bitAdd', function(bit){
+			if(bit.type == 'box') {
+				$('#qs_cat_' + bit.getValue()[0]).attr('checked', true);
+				submitQuickSearch();
+			}
+			
+		});
+
+		var quickSearchRequest;
+		function submitQuickSearch() {
+			delayFunction(sendQuickSearch, 500);
+		}
+        function buildQSQuery() {
+            var query = ['t=<?php echo $this->type; ?>'];
+			var price_min = parseInt($('input[name="price_min"]').val());
+			if (price_min) {
+				query.push('pmin=' + price_min);
+			}
+			var price_max = parseInt($('input[name="price_max"]').val());
+			if (price_max) {
+				query.push('pmax=' + price_max);
+			}
+			var rooms_min = parseInt($('input[name="rooms_min"]').val());
+			if (rooms_min) {
+				query.push('rmin=' + rooms_min);
+			}
+			var rooms_max = parseInt($('input[name="rooms_max"]').val());
+			if (rooms_max) {
+				query.push('rmax=' + rooms_max);
+			}
+			// lokacje
+			$(tl.getValues()).each(function(){
+				query.push('c[]=' + this[0]);
+			});
+			query = query.join('&');
+            return query;
+        }
+
+		function sendQuickSearch() {
+			if(quickSearchRequest){
+				quickSearchRequest.abort();
+			}
+			var query = buildQSQuery();
+			quickSearchRequest = $.get('<?php echo $this->baseUrl('json/products/quicksearch'); ?>?' + query, function(data) {
+				$('.quick-search-results>span').html(data);
+			});
+
+		}
+		function addTextAreaCallback(textArea, callback, delay) {
+			var timer = null;
+			$(textArea).keyup(function() {
+				if (timer) {
+					window.clearTimeout(timer);
+				}
+				timer = window.setTimeout( function() {
+					timer = null;
+					callback();
+				}, delay );
+			});
+			textArea = null;
+		}
+		
+		$('input', 'form[name="quick-search-form"]').keyup(function(){
+			submitQuickSearch();
+		});
+
+		$( ".qs-cat-all" ).dialog({
+			title: 'Wybierz dzielnice',
+			autoOpen: false,
+			//draggable: false,
+			//resizable: false,
+			height: 350,
+			width: 400,
+			modal: false
+		});
+		$('.qs-cat-open').click(function(){
+			$('#' + this.id.replace('_open_', '_ls_')).dialog('open');
+			return false;
+		});
+        $('#quick-search-submit').click(function(){
+            var query = [['t','<?php echo $this->type; ?>']];
+			var price_min = parseInt($('input[name="price_min"]').val());
+			if (price_min) {
+				query.push(['pmin', price_min]);
+			}
+			var price_max = parseInt($('input[name="price_max"]').val());
+			if (price_max) {
+				query.push(['pmax', price_max]);
+			}
+			var rooms_min = parseInt($('input[name="rooms_min"]').val());
+			if (rooms_min) {
+				query.push(['rmin', rooms_min]);
+			}
+			var rooms_max = parseInt($('input[name="rooms_max"]').val());
+			if (rooms_max) {
+				query.push(['rmax', rooms_max]);
+			}
+			// lokacje
+			$(tl.getValues()).each(function(){
+				query.push(['c[]', this[0]]);
+			});
+            var url = '<?php echo $this->baseUrl('oferty-' . ($this->type == 'sale' ? 'sprzedazy' : 'wynajmu') . '/'); ?>';
+            post_to_url(url, query);
+            return false;
+        });
+	});
+</script>

@@ -1,0 +1,56 @@
+<?php echo $this->doctype(); ?>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<?php echo $this->headTitle(); ?>
+		<?php echo $this->headLink(); ?>
+		<?php echo $this->headStyle(); ?>
+		<link rel="stylesheet" href="<?php echo $this->baseUrl('css/spav-theme/jquery-ui-1.8.1.custom.css'); ?>" type="text/css" media="screen" />
+		<link rel="stylesheet" href="<?php echo $this->baseUrl('css/nivo-slider.css'); ?>" type="text/css" media="screen" />
+        <link rel="stylesheet" href="<?php echo $this->baseUrl('css/prettyPhoto.css'); ?>" type="text/css" media="screen" />
+        <link rel="stylesheet" href="<?php echo $this->baseUrl('css/style.css'); ?>" type="text/css" />
+
+        <script type="text/javascript" src="<?php echo $this->baseUrl('js/jquery-1.4.2.min.js'); ?>"></script>
+		<script type="text/javascript" src="<?php echo $this->baseUrl('js/jquery-ui-1.8.1.custom.min.js'); ?>"></script>
+		<script type="text/javascript" src="<?php echo $this->baseUrl('js/textbox/TextboxList.js'); ?>"></script>
+		<script type="text/javascript" src="<?php echo $this->baseUrl('js/textbox/TextboxList.Autocomplete.js'); ?>"></script>
+		<script type="text/javascript" src="<?php echo $this->baseUrl('js/textbox/GrowingInput.js'); ?>"></script>
+		<script type="text/javascript" src="<?php echo $this->baseUrl('js/jquery.nivo.slider.js'); ?>"></script>
+        <script type="text/javascript" src="<?php echo $this->baseUrl('js/jquery.prettyPhoto.js'); ?>"></script>
+        <script type="text/javascript" src="<?php echo $this->baseUrl('js/helpers.js'); ?>"></script>
+        <script type="text/javascript" src="<?php echo $this->baseUrl('js/npg.js'); ?>"></script>
+	</head>
+	<body bgcolor="#E7E8E2">
+		<div id="pageWraper">
+			<div id="header">
+				<a id="header-link" href="<?php echo $this->baseUrl('/'); ?>" title="www.npg.pl"></a>
+				<div id="header-info">
+					<p class="npg-color">
+						<b>Agencja Nieruchomości "Jodłowski"</b><br/>
+						Al. Niepodległości 767<br/>
+						81-841 Sopot<br/>
+					</p><p>
+						Tel. 58 550-30-80, 58 550-30-82<br/>
+						Fax. 58 551-75-08<br/>
+						e-mail: kancelaria@npg.pl<br/>
+					</p><p>
+						Zadzwoń lub <a href="<?php echo $this->baseUrl('napisz-do-nas'); ?>" title="napisz do nas">napisz do nas</a>
+					</p>
+				</div>
+				<?php echo $this->placeholder('header'); ?>
+			</div>
+			<div id="container-right-col">
+				<div id="center" class="column">
+					<?php echo $this->placeholder('center'); ?>
+					<?php echo $this->layout()->content; ?>
+				</div>
+				<div id="right" class="column">
+					<?php echo $this->placeholder('right'); ?>
+				</div>
+
+			</div>
+
+			<div id="footer"></div>
+		</div>
+	</body>
+</html>

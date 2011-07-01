@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Panel Administracyjny :: Jodłowski - Nieruchomości Pomorza Gdańskiego</title>
+	
+	<link type="text/css" href="<?=$this->baseUrl('admin/css/main.css')?>" rel="stylesheet" />
+	<link type="text/css" href="<?=$this->baseUrl('admin/css/colors/dark_blue.css')?>" rel="stylesheet" />
+	<link type="text/css" href="<?=$this->baseUrl('admin/css/superfish.css')?>" rel="stylesheet" />
+	<link type="text/css" href="<?=$this->baseUrl('admin/css/jquery.toastmessage.css')?>" rel="stylesheet" />
+	<link type="text/css" href="<?=$this->baseUrl('admin/jstree_themes/default/style.css')?>" rel="stylesheet" />
+
+	<script type="text/javascript" src="<?=$this->baseUrl('js/jquery-1.4.2.min.js')?>"></script>    
+	<script type="text/javascript" src="<?=$this->baseUrl('js/jquery-ui-1.8.1.custom.min.js')?>"></script>
+
+	<script type="text/javascript" src="<?=$this->baseUrl('js/ckeditor/ckeditor.js')?>"></script> 
+	<script type="text/javascript" src="<?=$this->baseUrl('js/ckfinder/ckfinder.js')?>"></script> 
+	<script type="text/javascript" src="<?=$this->baseUrl('js/ckeditor/adapters/jquery.js')?>"></script>
+
+	<script type="text/javascript" src="<?=$this->baseUrl('admin/js/jquery.hoverIntent.minified.js')?>"></script>
+	<script type="text/javascript" src="<?=$this->baseUrl('admin/js/superfish.js')?>"></script>
+	<script type="text/javascript" src="<?=$this->baseUrl('admin/js/jquery.tools.min.js')?>"></script>
+	<script type="text/javascript" src="<?=$this->baseUrl('admin/js/jquery.simplemodal.js')?>"></script>
+	<script type="text/javascript" src="<?=$this->baseUrl('admin/js/jquery.tipsy.js')?>"></script>
+	<script type="text/javascript" src="<?=$this->baseUrl('admin/js/jquery.validate.min.js')?>"></script>
+	<script type="text/javascript" src="<?=$this->baseUrl('admin/js/enhance.js')?>"></script>
+	<script type="text/javascript" src="<?=$this->baseUrl('admin/js/excanvas.js')?>"></script>
+	<script type="text/javascript" src="<?=$this->baseUrl('admin/js/visualize.jQuery.js')?>"></script>
+	<script type="text/javascript" src="<?=$this->baseUrl('admin/js/jQuery.collapsible.js')?>"></script>
+	<script type="text/javascript" src="<?=$this->baseUrl('admin/js/jquery.autoSuggest.packed.js')?>"></script>
+	<script type="text/javascript" src="<?=$this->baseUrl('admin/js/jquery.jstree.js')?>"></script>
+	<script type="text/javascript" src="<?=$this->baseUrl('admin/js/jquery.toastmessage.js')?>"></script>
+	<script type="text/javascript" src="<?=$this->baseUrl('admin/js/platinum-admin.js')?>"></script>
+
+	<script type="text/javascript" src="<?=$this->baseUrl('js/jquery.zend.jsonrpc.js')?>"></script>
+	<script type="text/javascript" src="<?=$this->baseUrl('js/json2.js')?>"></script>
+	
+	<script type="text/javascript" src="<?=$this->baseUrl('js/jquery.zgrid.js')?>"></script>
+	<script type="text/javascript">
+		// rpc server
+		var client = jQuery.Zend.jsonrpc({url: '<?=$this->baseUrl('rpc')?>'});
+		$(document).ready(function(){
+			$('a#power').click(function(e){
+				e.stopPropagation();
+				client.logout();
+				location.reload();
+				return false;
+			});
+			<?=$this->message()?>
+            finder = new CKFinder();
+            finder.basePath = '<?=$this->baseUrl('js/ckfinder')?>';
+	    });
+	</script>
+</head>
+
+<body>
+
+<div id="header">
+	<div id="header-top">
+		<div id="logo">
+			<h1>Panel Administracyjny</h1>
+			<span id="slogan">Jodłowski - Nieruchomości Pomorza Gdańskiego</span> 
+		</div>
+		<!-- end logo -->
+		<div id="login-info">
+			<img src="<?=$this->baseUrl('admin/images/icons/user.png');?>" alt="profile" id="profile"/>
+			<p id="top"><span id="name"><?=$this->user()->getName().' '.$this->user()->getSurname()?></span><br/>
+			<span id="links">
+			<a title="click to see the messages!" href="#" id="message-link">
+				<?php if ($this->user()->getNewMessagesNumber()): ?>
+					<span id="message-count"><?=$this->user()->getNewMessagesNumber()?></span> nowych wiadomosści.
+				<?php else: ?>
+					nie masz nowych wiadomości
+				<?php endif ?>
+			</a></span></p>
+			<div id="messages-box">
+				<h4>Messages</h4>
+				<h5><a href="#" id="new-message">New Message</a></h5>
+				<hr/>
+				<br class="clear"/>
+			</div>
+			<!-- end messages-box -->
+			<a title="Logout" href="#" id="power">logout</a>
+		</div>
+		<?=$this->adminMenu()?>
+	</div>
+	<!-- end div#header-top -->
+	<?=$this->adminBreadcrumbs()?>
+	<!-- end div#search-box -->
+</div>
+<!-- end header -->
+<div id="page-wrap">
+	<div id="right-sidebar">
+		<?=$this->placeholder('sidebar')?>
+	</div>
+	<!-- end right-sidebar -->
+	<div id="main-content">
+		<?=$this->layout()->content?>
+	</div>
+	<!-- end main-content -->
+</div>
+<!-- end page-wrap -->
+<!--<div id="footer">
+	<p>© 2011 "Jodłowski" Nieruchomości NPG</p>
+</div>-->
+<!-- end footer -->
+
+<!-- Alert Dialog -->
+<div id="alert-modal" class="modal">
+	<h2 class="head-alt">Uwaga!</h2>
+	<div class="alert-content message"></div>
+	<br class="clear" />
+</div>
+<div id="confirm-modal" class="modal">
+	<h2 class="head-alt">Jesteś pewny ?</h2>
+	<div class="message"></div>
+	<div class="buttons">
+		<div class="yes"><a class="button red">TAK</a></div>
+		<div class="no simplemodal-close"><a class="button gray">NIE</a></div>
+	</div>
+</div>
+<div class="modal" id="image-modal">
+	<div id="image-wrap">
+		<img alt="modal picture" id="modal-image"/>
+	</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<home>
+		<id>dashboard</id>
+		<label>Strona Główna</label>
+		<module>cms</module>
+		<controller>index</controller>
+		<action>index</action>
+		<pages>	
+			<home_2>
+				<label>wróć do strony głównej panelu</label>
+				<module>cms</module>
+				<controller>index</controller>
+				<action>index</action>
+			</home_2>
+		</pages>
+	</home>
+	<sale>
+		<label>Sprzedaż</label>
+		<module>cms</module>
+		<controller>products</controller>
+		<action>index</action>
+		<params>
+			<type>sale</type>
+		</params>
+		<pages>
+			<sale_add>
+           		<label>dodaj ofertę sprzedaży</label>
+           		<module>cms</module>
+				<controller>products</controller>
+				<action>add</action>
+				<params>
+					<type>sale</type>
+				</params>
+          	</sale_add>
+       	</pages>
+	</sale>
+	<rent>
+		<label>Wynajem</label>
+		<module>cms</module>
+		<controller>products</controller>
+		<action>index</action>
+		<params>
+			<type>rent</type>
+		</params>
+		<pages>
+			<rent_add>
+           		<label>dodaj ofertę wynajmu</label>
+           		<module>cms</module>
+				<controller>products</controller>
+				<action>add</action>
+				<params>
+					<type>rent</type>
+				</params>
+          	</rent_add>
+       	</pages>
+	</rent>
+
+	<local>
+		<label>Lokacje</label>
+		<module>cms</module>
+		<controller>local</controller>
+		<action>index</action>
+	</local>
+
+	<articles>
+		<label>Artykuły</label>
+		<module>cms</module>
+		<controller>articles</controller>
+		<action>index</action>
+		<pages>
+			<articles_add>
+           		<label>napisz artykuł</label>
+           		<module>cms</module>
+				<controller>articles</controller>
+				<action>add</action>
+          	</articles_add>
+           	<articles_2>
+       			<label>zarządzaj artykułami</label>
+       			<module>cms</module>
+       			<controller>articles</controller>
+      			<action>index</action>
+       		</articles_2>
+       		<!--<categories>
+         		<label>kategorie</label>
+      			<module>cms</module>
+       			<controller>categories</controller>
+       			<action>index</action>
+       		</categories>-->
+       	</pages>
+	</articles>
+	<advanced>
+		<label>Zaawansowane</label>
+		<module>cms</module>
+		<controller>advanced</controller>
+		<action>index</action>
+		<pages>
+       		<parameters>
+       			<label>parametry ofert</label>
+				<module>cms</module>
+       			<controller>parameters</controller>
+      			<action>index</action>
+       		</parameters>
+			<files>
+				<label>pliki</label>
+				<module>cms</module>
+				<controller>files</controller>
+				<action>index</action>
+			</files>
+			<users>
+				<label>ludzie</label>
+				<module>cms</module>
+				<controller>users</controller>
+				<action>index</action>
+			</users>
+
+		</pages>
+	</advanced>
+</config>

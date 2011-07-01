@@ -1,0 +1,63 @@
+<h1><?php echo $this->product->getAddress() . ', ' . $this->product->getCategory()->getName(); ?></h1>
+<div class="product-left-wraper">
+    <div class="product-images">
+        <?php $images = $this->product->getImages('_620x300');
+            $thumbs = $this->product->getImages('_thumbs');
+            if(!empty($images)) : ?>
+            <img class="product-image-zoom" src="<?php echo $images[0]; ?>" alt="powiększone zdjęcie"/>
+            <?php foreach($images as $k => $image) : ?>
+                <a class="product-image-mini" href="<?php echo $image; ?>">
+                    <img src="<?php echo $thumbs[$k]; ?>" alt="zdjęcie"/>
+                </a>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </div>
+    <div class="product-description"><?php echo $this->product->getDescription(); ?></div>
+</div>
+
+<div class="product-details">
+    <?php if($this->product->getSuperGallery()) : ?>
+        <a id="product-super-gallery" href="#gallery">GALERIA PEŁNOEKRANOWA</a>
+    <?php endif; ?>
+    <h2>Szczegóły:</h2>
+    <ul>
+        <li><strong>Cena:</strong> <?php echo $this->product->getPrice(); ?> zł</li>
+        <li>Lokacja: <?php echo $this->product->getCategory()->getName(); ?></li>
+        <li>Ilość pokoji: <?php echo $this->product->getRooms(); ?></li>
+        <li>Numer oferty: <?php echo $this->product->getName(); ?></li>
+    </ul>
+    <?php $parameters = $this->product->getParameters(true);
+        if(!empty($parameters)) : ?>
+        <ul>
+            <?php foreach($parameters as $parameter) : ?>
+                <li>
+                    <img src="<?php echo $parameter->getIcon(); ?>" alt="ikona"/>
+                    <?php echo $parameter->getValue(true); ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endif;
+        $parameters = $parameters = $this->product->getParameters(false);
+        if(!empty($parameters)) : ?>
+        <ul class="disc-list">
+            <?php foreach($parameters as $parameter): ?>
+                <li><?php echo $parameter->getValue(true); ?></li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endif; ?>
+</div>
+<?php if($this->product->getSuperGallery()) :
+    $images = $this->product->getImages();
+    if(!empty($images)) : ?>
+        <script type="text/javascript">
+        $(function() {
+            $('#product-super-gallery').click(function(){
+                var images = ['<?php echo implode("','",$images); ?>'];
+                var titles = ['<?php for($i = 0; $i < count($images); $i++) echo "','"; ?>'];
+                $.prettyPhoto.open(images,titles,titles);
+                return false;
+            });
+        });
+        </script>
+    <?php endif;
+endif; ?>

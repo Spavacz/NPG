@@ -1,0 +1,11 @@
+<h1><?php echo $this->category->getName(); ?></h1>
+<img src="<?php echo $this->category->getImage(); ?>" alt="<?php echo $this->category->getName(); ?>" />
+<div id="local-desc"><?php echo $this->category->getDescription(); ?></div>
+<div id="local-places">
+	<h1>Wybrane miejsca</h1>
+	<ul>
+		<?php foreach($this->category->getChildren() as $place): ?>
+			<li><a href="<?php echo $place->getUrl(); ?>" title="<?php echo $place->getName(); ?>"><?php echo $place->getName(); ?></a></li>
+		<?php endforeach; ?>
+	</ul>
+</div>

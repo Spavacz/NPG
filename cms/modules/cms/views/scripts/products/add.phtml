@@ -1,0 +1,84 @@
+<script type="text/javascript">
+<!--
+$(document).ready(function(){
+	$('#product-form').validate();
+	$('#product-form').submit( function(e){
+		e.stopPropagation();
+		if( $('#product-form').valid() ) {
+			$('#description').val( CKEDITOR.instances.description.getData() );
+			var result = client['product.add']($('#product-form').serializeArray());
+			if(client.error) {
+				showError('Zapis nie powiódł się :(');
+				return false;
+				/*error_message = jQuery.parseJSON(client.error_message);
+				for( var field in error_message ) {
+					for( var error in error_message[field] ) {
+						$('input[name=name]');
+					} 
+				}*/
+			} else {
+				//showSuccess(result);
+				document.location.href = '<?php echo $this->baseUrl('cms/products/index/type/' . $this->type); ?>';
+			}
+		} else {
+			showError('Wypełnij poprawnie formularz');
+		}				
+		return false;
+	});
+	$('#cancel').click( function(e) {
+		confirm('Uwaga! zmiany nie zostana zapisane.', function() {
+			document.location.href = '<?php echo $this->baseUrl('cms/products/index/type/' . $this->type); ?>';
+		});
+	});
+
+	finder.selectActionFunction = function(filename) {
+		var index = $('.imageList>li').length + 1;
+		var thumb_filename = filename.replace('/obrazy/', '/_thumbs/obrazy/');
+		var img = $('<li style="display:none" id="images'+index+'"><input type="hidden" name="images[]" value="'+filename+'"/>'
+			+ '<img src="<?=$this->baseUrl()?>'+thumb_filename+'" alt="image">'
+			+ '<ul style="display: none;"><li>'
+			+ '<a href="<?=$this->baseUrl()?>'+filename+'" class="image-modal">Powiększ</a>'
+			+ '<a rel="images'+index+'" onclick="confirm(\'Naprawdę chcesz usunąć zdjęcie?\', deleteimage, $(this).attr(\'rel\')); return false;" href="#delete-image" class="confirm-image-delete">Usuń</a>'
+			+ '</li></ul></li>');
+		$('.imageList').append(img);
+		img.fadeIn();
+		// jeszcze raz nakladamy eventy (z lenistwa, powinno byc tylko dla nowego
+		$('ul.imageList li').hover(
+			function() { $(this).find('ul').css('display', 'none').slideDown('fast').css('display', 'block'); },
+			function() { $(this).find('ul').slideUp('fast'); }
+		);
+		$('.imageList a.image-modal').click(function (e) {
+			e.preventDefault();
+			show_image(this.href);
+		});
+	};
+	$('#add-image').click(function(e) {		
+		finder.popup();
+		return false;
+	});
+});	
+//-->
+</script>
+<div class="innerdiv clear">
+	<!-- Tabs -->
+	<h2 class="head-alt-white"><?php echo $this->type == 'sale' ? 'Sprzedaż':'Wynajem';?> - Nowa oferta</h2>
+	<ul class="tabs">
+		<li><a href="<?php echo $this->baseUrl('cms/products/index/type/' . $this->type); ?>">
+				Oferty <?php echo $this->type == 'sale' ? 'sprzedaży':'wynajmu';?></a></li>
+		<li><a class="current" href="<?php echo $this->baseUrl('cms/products/add/type/' . $this->type); ?>">
+				Dodaj ofertę <?php echo $this->type == 'sale' ? 'sprzedaży':'wynajmu';?></a></li>
+	</ul>
+	<div class="innercontent">
+		<!-- tab "panes" -->
+		<div class="panes">
+			<div style="display: block;">
+				<?php echo $this->form; ?>
+				<!--<form method="<?php echo $this->form->getMethod() ?>" action="<?php echo $this->form->getAction()?>">
+					<div id="elements">
+						<?php echo $this->form->name->renderLabel() . $this->form->name->renderViewHelper(); ?>
+					</div>
+				</form>-->
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,18 @@
+<div class="agents">
+    <h1>Nasi Agenci</h1>
+    <ul>
+        <?php foreach($this->agents as $agent):
+            $name = $agent->getName(true);
+        ?>
+            <li id="<?php echo $agent->getSurname(); ?>">
+                <img src="<?php echo $agent->getPhoto('thumbs'); ?>" alt="<?php echo $name; ?>"/>
+                <h2><?php echo $name; ?></h2>
+                <?php if($agent->getPhone()) : ?>
+                    telefon: <?php echo $agent->getPhone(); ?><br/>
+                <?php endif; ?>
+                email: <?php echo $agent->getEmail(); ?>
+                <?php echo $agent->getDescription(); ?>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+</div>

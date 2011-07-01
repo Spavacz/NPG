@@ -1,0 +1,30 @@
+<div>
+	<div>
+
+		<h3>Witaj <?=$this->name?>! Co byś chciał zrobic?</h3>
+		<ul class="iconset">
+			<li><a href="<?=$this->baseUrl('cms/articles/add')?>"><span>
+			<img alt="event" src="<?=$this->baseUrl('admin/images/icons/write.png')?>" /> <br />
+			Napisz Artykuł </span></a></li>
+			<li><a href="<?=$this->baseUrl('cms/products/add')?>"><span>
+			<img alt="event" src="<?=$this->baseUrl('admin/images/icons/event.png')?>" /> <br />
+			Dodaj Ofertę </span></a></li>
+			<li><a href="<?=$this->baseUrl('cms/users/add')?>"><span>
+			<img alt="event" src="<?=$this->baseUrl('admin/images/icons/adduser.png')?>" /> <br />
+			Dodaj Użytkownika </span></a></li>
+			<li><a href="<?=$this->baseUrl('cms/files')?>"><span>
+			<img alt="event" src="<?=$this->baseUrl('admin/images/icons/theme.png')?>" /> <br />
+			Wyślij Plik </span></a></li>
+			<li><a href="<?=$this->baseUrl('cms/import')?>"><span>
+			<img alt="event" src="<?=$this->baseUrl('admin/images/icons/stats.png')?>" /> <br />
+			Importuj Dane </span></a></li>
+			<li><a href="<?=$this->baseUrl('cms/backup')?>"><span>
+			<img alt="event" src="<?=$this->baseUrl('admin/images/icons/database.png')?>" /> <br />
+			Przeprowadź Backup </span></a></li>
+			<!-- <li><a class="modal-box" href="#modal-content"><span>
+			<img alt="event" src="<?=$this->baseUrl('admin/images/icons/dialog.png')?>" /> <br />
+			Open Modal </span></a></li> -->
+		</ul>
+		<br class="clear" />
+	</div>
+</div>

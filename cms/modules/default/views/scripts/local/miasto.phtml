@@ -1,0 +1,33 @@
+<h1><?php echo $this->category->getName(); ?></h1>
+
+<ul>
+    <?php foreach($this->main as $category) : ?>
+        <li>
+            <a href="<?php echo $category->getUrl(); ?>">
+                <?php if($category->getId() == $this->category->getId()) : ?>
+                    <strong><?php echo $category->getName(); ?></strong>
+                <?php else: ?>
+                    <?php echo $category->getName(); ?>
+                <?php endif; ?>
+            </a>
+        </li>
+    <?php endforeach; ?>
+</ul>
+
+<img src="<?php echo $this->category->getImage(); ?>" alt="<?php echo $this->category->getName(); ?>"/>
+<?php echo $this->category->getDescription(); ?>
+
+<ul class="local-categories">
+    <?php foreach($this->main as $category) : ?>
+        <li>
+            <?php echo $category->getName(); ?>
+            <ul>
+                <?php foreach($category->getChildren() as $sub): ?>
+                    <li>
+                        <a href="<?php echo $sub->getUrl(); ?>" title="<?php echo $sub->getName(); ?>"><?php echo $sub->getName(); ?></a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </li>
+    <?php endforeach; ?>
+</ul>

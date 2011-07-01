@@ -1,0 +1,81 @@
+<div class="innerdiv clear">
+	<!-- Tabs -->
+	<h2 class="head-alt-white">Parametry</h2>
+	<ul class="tabs">
+		<li><a class="current" href="<?=$this->baseUrl('cms/parameters')?>">Lista</a></li>
+		<li><a href="<?=$this->baseUrl('cms/parameters/add')?>">Dodaj nowy</a></li>
+	</ul>
+	<div class="innercontent">
+		<!-- tab "panes" -->
+		<div class="panes">
+			<div style="display: block;">
+				<table id="parameter-list" class="full"></table>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+<!--
+	$('#parameter-list').zGrid({
+		url: '/rest/parameters',
+		pageTotal: <?=$this->pageTotal?>,
+		pageLimit: <?=$this->pageLimit?>,
+		checkboxes: true,
+		controls: true,
+		paginator: true,
+		pageTag: 'page',
+		sortable: true,
+		sortTag: 'sort',
+		cols: [{
+			label: 'Nazwa',
+			id: 'name',
+			type: 'head',
+			sortable: true
+		},{
+			label: 'Opis',
+			id: 'description',
+			type: 'string',
+			sortable: true
+		},{
+			label: 'Typ',
+			id: 'type',
+			type: 'string',
+			sortable: true
+		}],
+		bulk: [{
+			label: 'Usuń',
+			action: 'delete'
+		}],
+		onLoad: function(){
+			$('.delete-btn').click( function(e){
+				e.stopPropagation();
+				confirm( 'usuwamy?', function() {
+					deleteParameter(e.currentTarget.name);
+				});
+				return false;
+			});
+		},
+		onBulk: function( action, selected ){
+			if( action == 'delete' ) {
+				confirm( 'usuwamy?', function() {
+					selected.each(function(i, chk) {
+						deleteParameter(chk.value);
+					});
+				});
+			}
+		}
+	});
+
+	function deleteParameter(id) {
+		var result = client['parameter.delete'](id);
+		if(client.error) {
+			showError('Usunięcie nie powiódło się :(');
+		} else {
+			//window.location.reload();
+			$('#parameter-list').zGridDeleteRow(id);
+			showSuccess(result);
+		}
+	}
+//-->
+</script>

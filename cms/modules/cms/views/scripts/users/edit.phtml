@@ -1,0 +1,67 @@
+<script type="text/javascript">
+<!--
+$(document).ready(function(){
+	$('#user-form').validate();
+	$('#user-form').submit( function(e){
+		e.stopPropagation();
+		if( $('#user-form').valid() ) {
+			$('#description').val( CKEDITOR.instances.description.getData() );
+			var result = client['user.edit']('<?=$this->id?>', $('#user-form').serializeArray());
+			if(client.error) {
+				showError('Zapis nie powiódł się :(');
+				return false;
+				error_message = jQuery.parseJSON(client.error_message);
+				for( var field in error_message ) {
+					for( var error in error_message[field] ) {
+						$('input[name=name]');
+					} 
+				}
+			} else {
+				//showSuccess(result);
+				document.location.href = '<?=$this->baseUrl('cms/users')?>';
+			}
+		} else {
+			showError('Wypełnij poprawnie formularz');
+		}				
+		return false;
+	});
+	$('#cancel').click( function(e) {
+		if( confirm('Uwaga! zmiany nie zostana zapisane.', function() {
+			document.location.href = '<?=$this->baseUrl('cms/users')?>';
+		}));
+	});
+
+	finder = new CKFinder();
+	finder.basePath = '<?=$this->baseUrl('js/ckfinder')?>';
+	finder.selectActionFunction = function(filename) {
+		var thumb_filename = filename.replace('/images/', '/_thumbs/images/');
+		$('div.imageInput>input').val(filename);
+		$('div.imageInput>img').attr('src', thumb_filename);		
+		$('.imageInput a.image-modal').click(function (e) {
+			e.preventDefault();
+			show_image(this.href);
+		});
+	};
+	$('#add-image').click(function(e) {		
+		finder.popup();
+		return false;
+	});
+});	
+//-->
+</script>
+<div class="innerdiv clear">
+	<!-- Tabs -->
+	<h2 class="head-alt-white">Edycja użytkownika</h2>
+	<ul class="tabs">
+		<li><a href="<?=$this->baseUrl('cms/users')?>">Lista</a></li>
+		<li><a href="<?=$this->baseUrl('cms/users/add')?>">Dodaj nowego</a></li>
+	</ul>
+	<div class="innercontent">
+		<!-- tab "panes" -->
+		<div class="panes">
+			<div style="display: block;">
+				<?=$this->form?>
+			</div>
+		</div>
+	</div>
+</div>

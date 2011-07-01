@@ -1,0 +1,13 @@
+array(1) {
+  [0]=>
+  array(4) {
+    ["directory"]=>
+    string(8) "_620x300"
+    ["maxWidth"]=>
+    int(620)
+    ["maxHeight"]=>
+    int(300)
+    ["quality"]=>
+    int(90)
+  }
+}

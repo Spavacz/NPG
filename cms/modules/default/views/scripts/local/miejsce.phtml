@@ -1,0 +1,14 @@
+<h1><?php echo $this->category->getName() . ' ' . $this->parent->getName(); ?></h1>
+<ul>
+	<?php foreach ($this->locals as $local): ?>
+	<li>
+		<h2><?php echo $local->getName(); ?></h2>
+		<?php echo $local->getAddress(); ?><br/>
+		<a href="http://<?php echo $local->getWww(); ?>" title="<?php echo $local->getWww(); ?>"><?php echo $local->getWww(); ?></a><br/>
+		<?php if($image = $local->getImage('thumbs')): ?>
+			<img src="<?php echo $image; ?>" alt="<?php echo $local->getName(); ?>"/>
+		<?php endif; ?>
+		<?php echo $local->getDescription(); ?>
+	</li>
+	<?php endforeach; ?>
+</ul>

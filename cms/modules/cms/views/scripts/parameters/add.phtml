@@ -1,0 +1,77 @@
+<script type="text/javascript">
+<!--
+function addOption(id, value) {
+	$('#options-list').append( $('<div>' +
+		'<input type="text" name="option-value[]" value="' + value + '">' +
+		'<input type="hidden" name="option-id[]" value="' + id + '">' +
+		'<a href="#" onclick="deleteOption(this);return false;"><img src="<?=$this->baseUrl('admin/images/icons/delete.png');?>" alt="Usuń"></a>' +
+	'</div>') );
+}
+function deleteOption(button) {
+	$(button).parent().remove();
+}
+function deleteAllOptions() {
+	$('#options-list').empty();
+}
+
+
+$(document).ready(function(){
+	$('#parameter-form').validate();
+	$('#parameter-form').submit( function(e){
+		e.stopPropagation();
+		if( $('#parameter-form').valid() ) {
+			var result = client['parameter.add']($('#parameter-form').serializeArray());
+			if(client.error) {
+				showError('Zapis nie powiódł się :(');
+				return false;
+			} else {
+				document.location.href = '<?=$this->baseUrl('cms/parameters')?>';
+			}
+		} else {
+			showError('Wypełnij poprawnie formularz');
+		}				
+		return false;
+	});
+	$('#cancel').click( function(e) {
+		if( confirm('Uwaga! zmiany nie zostana zapisane.', function() {
+			document.location.href = '<?=$this->baseUrl('cms/parameters')?>';
+		}));
+	});
+
+	$('select#type').change( function(e) {
+		if( $(this).val() != 'select' ) {
+			$('.options-box').fadeOut();
+			$('.options-list input').attr('disabled', 'disabled');
+		} else {
+			$('.options-list input').removeAttr('disabled');
+			$('.options-box').fadeIn();
+		}
+	});
+	$('select#type').change();
+	
+	$('#add-option').click( function(e) {
+		addOption('','');
+		return false;
+	});
+
+	finder = new CKFinder();
+	finder.basePath = '<?=$this->baseUrl('js/ckfinder')?>';
+});	
+//-->
+</script>
+<div class="innerdiv clear">
+	<!-- Tabs -->
+	<h2 class="head-alt-white">Nowy parametr</h2>
+	<ul class="tabs">
+		<li><a href="<?=$this->baseUrl('cms/articles')?>">Lista</a></li>
+		<li><a class="current" href="<?=$this->baseUrl('cms/articles/add')?>">Dodaj nowy</a></li>
+	</ul>
+	<div class="innercontent">
+		<!-- tab "panes" -->
+		<div class="panes">
+			<div style="display: block;">
+				<?=$this->form?>
+			</div>
+		</div>
+	</div>
+</div>

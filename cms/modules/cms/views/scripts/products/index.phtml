@@ -1,0 +1,117 @@
+<div class="innerdiv clear">
+	<!-- Tabs -->
+	<h2 class="head-alt-white">Oferty <?php echo $this->type == 'sale' ? 'Sprzedaży' : 'Wynajmu'; ?></h2>
+	<ul class="tabs">
+		<li><a class="current" href="<?php echo $this->baseUrl('cms/products/index/type/'.$this->type); ?>">
+				Oferty <?php echo $this->type == 'sale' ? 'sprzedaży':'wynajmu'; ?></a></li>
+		<li><a href="<?php echo $this->baseUrl('cms/products/add/type/'.$this->type); ?>">
+				Dodaj ofertę <?php echo $this->type == 'sale' ? 'sprzedaży':'wynajmu'; ?></a></li>
+	</ul>
+	<div class="innercontent">
+		<!-- tab "panes" -->
+		<div class="panes">
+			<form name="search" method="GET" action="#search">
+				Numer: <input type="text" name="search"/>
+				<input class="button" id="search-button" type="submit" value="Szukaj"/>
+			</form>
+			<div style="display: block;">
+				<table id="product-list" class="full"></table>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript" src="<?php echo $this->baseUrl('admin/js/jquery.autocomplete-min.js');?>"></script>
+<script type="text/javascript">
+<!--
+	$('#product-list').zGrid({
+		url: '<?php echo $this->baseUrl('rest/products'); ?>?type=<?php echo $this->type; ?>',
+		pageTotal: <?php echo $this->pageTotal; ?>,
+		pageLimit: <?php echo $this->pageLimit; ?>,
+		checkboxes: true,
+		controls: true,
+		paginator: true,
+		pageTag: 'page',
+		sortable: true,
+		sortTag: 'sort',
+		cols: [{
+			label: 'Numer',
+			id: 'name',
+			type: 'head',
+			sortable: true
+		},{
+			label: 'Opis',
+			id: 'description',
+			type: 'string',
+			sortable: false
+		},{
+			label: 'Status',
+			id: 'status',
+			type: 'img',
+			sortable: true
+		}],
+		bulk: [{
+			label: 'Usuń',
+			action: 'delete'
+		}],
+		onLoad: function(){
+			$('.delete-btn').click( function(e){
+				e.stopPropagation();
+				confirm( 'usuwamy?', function() {
+					deleteProduct(e.currentTarget.name);
+				});
+				return false;
+			});
+		},
+		onBulk: function( action, selected ){
+			if( action == 'delete' ) {
+				confirm( 'usuwamy?', function() {
+					selected.each(function(i, chk) {
+						deleteProduct(chk.value);
+					});
+				});
+			}
+		}
+	});
+
+	function deleteProduct(id) {
+		var result = client['product.delete'](id);
+		if(client.error) {
+			showError('Usunięcie nie powiódło się :(');
+		} else {
+			//window.location.reload();
+			$('#product-list').zGridDeleteRow(id);
+			showSuccess(result);
+		}
+	}
+
+	$(function () {
+		$('form[name|="search"]').submit(function(e){
+			if($('input[name|="search"]').val() != '') {
+				// szukamy
+				jQuery.each($('#product-list'), function(index,grid) {
+					grid.p.url = '<?php echo $this->baseUrl('rest/products?type=' . $this->type); ?>&search=' + $('input[name|="search"]').val();
+					grid.grid.loadData();
+				});
+			} else {
+				// reset
+				jQuery.each($('#product-list'), function(index,grid) {
+					grid.p.url = '<?php echo $this->baseUrl('rest/products?type=' . $this->type); ?>';
+					grid.grid.loadData();
+				});
+			}
+			return false;
+		})
+
+		ac = $('input[name|="search"]').autocomplete({
+			'serviceUrl' : '<?php echo $this->baseUrl('rest/autocomplete?type=' . $this->type); ?>',
+			'minChars' : 3,
+			'deferRequestBy' : 500,
+			'onSelect' : function(value) {
+				$('form[name|="search"]').submit();
+			}
+		});
+	});
+
+//-->
+</script>

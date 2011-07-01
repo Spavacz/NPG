@@ -1,0 +1,51 @@
+<div id="slider-wrapper">
+	<div id="slider1" class="nivoSlider">
+		<?php foreach ($this->products[0] as $product): ?>
+			<a title="<?php echo $product->getName(); ?>" href="<?php echo $this->baseUrl($product->getUrl()); ?>">
+				<img title="<?php echo $product->getName(); ?>" src="<?php echo $this->baseUrl($product->getMainImage('_620x300')); ?>" alt="" /></a>
+		<?php endforeach; ?>
+	</div>
+    <div id="slider2" class="nivoSlider" style="display:none">
+		<?php foreach ($this->products[1] as $product): ?>
+			<a title="<?php echo $product->getName(); ?>" href="<?php echo $this->baseUrl($product->getUrl()); ?>">
+				<img title="<?php echo $product->getName(); ?>" src="<?php echo $this->baseUrl($product->getMainImage('_620x300')); ?>" alt="" /></a>
+		<?php endforeach; ?>
+	</div>
+    <div id="slider3" class="nivoSlider" style="display:none">
+		<?php foreach ($this->products[2] as $product): ?>
+			<a title="<?php echo $product->getName(); ?>" href="<?php echo $this->baseUrl($product->getUrl()); ?>">
+				<img title="<?php echo $product->getName(); ?>" src="<?php echo $this->baseUrl($product->getMainImage('_620x300')); ?>" alt="" /></a>
+		<?php endforeach; ?>
+	</div>
+	<ul class="slider-select">
+        <li><a href="#gdansk" id="slider-select-1"></a></li>
+        <li><a href="#gdynia" id="slider-select-2"></a></li>
+        <li><a href="#sopot" id="slider-select-3"></a></li>
+	</ul>
+</div>
+<script type="text/javascript">
+    function showSlider(no) {
+        for(var i = 1; i <= 3; i++) {
+            if(no != i) {
+                var slider = $('#slider' + i);
+                slider.data('nivoslider').stop();
+                slider.hide();
+                $('#slider-select-' + i).removeClass('active');
+            }
+        }
+        slider = $('#slider' + no);
+        slider.data('nivoslider').start();
+        slider.show();
+        $('#slider-select-' + no).addClass('active');
+    }
+    
+	$(window).load(function() {
+		var slider1 = $('#slider1').nivoSlider();
+        var slider2 = $('#slider2').nivoSlider();
+        var slider3 = $('#slider3').nivoSlider();
+        showSlider(2);
+        $('#slider-select-1').click(function(){showSlider(1);return false});
+        $('#slider-select-2').click(function(){showSlider(2);return false});
+        $('#slider-select-3').click(function(){showSlider(3);return false});
+	});
+</script>

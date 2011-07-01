@@ -1,0 +1,9 @@
+<h1>Napisz do nas</h1>
+<?php echo $this->pages(); ?>
+<div class="article-text">
+	<?php if ($this->success): ?>
+		<p>Dziękujemy za wysłanie wiadomości. @todo Uzupełnić treść</p>
+	<?php else: ?>
+		<?php echo $this->form; ?>
+	<?php endif; ?>
+</div>

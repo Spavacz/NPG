@@ -1,0 +1,34 @@
+<h1>Wyniki wyszukiwania ofert <?php echo $this->type == 'sale' ? 'sprzedaży' : 'wynajmu'; ?></h1>
+<?php $start = ($this->paginator->getCurrentPageNumber() - 1) * $this->paginator->getItemCountPerPage() + 1;
+    $end = $start + $this->paginator->getCurrentItemCount() - 1; ?>
+<h2>Wyświetlam trafienia od <?php echo "{$start} do {$end} z {$this->paginator->getTotalItemCount()}";?></h2>
+<ul class="list">
+    <?php foreach($this->products as $product) : ?>
+        <li>
+            <div class="list-image">
+                <a href="<?php echo $product->getUrl(); ?>">
+                    <img src="<?php echo $product->getMainImage('_thumbs'); ?>" alt="<?php echo $product->getName(); ?>"/>
+                </a>
+            </div>
+            <div class="list-info">
+                <ul>
+                    <li class="list-name">
+                        <strong><a href="<?php echo $product->getUrl(); ?>"><?php echo $product->getAddress(); ?></a></strong>
+                    </li>
+                    <?php echo $product->getCategory()->getName(); ?>
+                    <li><strong>Cena:</strong> <?php echo $product->getPrice(); ?> zł</li>
+                    <li><?php echo $product->getSubtype(false); ?></li>
+                    <li>Numer oferty: <?php echo $product->getName(); ?></li>
+                </ul>
+            </div>
+            <div class="list-links">
+                <ul>
+                    <li><a href="<?php echo $product->getUrl(); ?>" title="pełen opis">Pokaż pełen opis</a></li>
+                    <li><a class="list-show-images" href="#zdjęcia" title="pokaż zdjęcia">Pokaż zdjęcia</a></li>
+                    <li><a class="list-show-description" href="<?php echo $this->baseUrl('json/products/description/id/' . $product->getId()); ?>" title="pokaż opis">Pokaż opis</a></li>
+                </ul>
+            </div>
+        </li>
+    <?php endforeach; ?>
+</ul>
+<?php echo $this->paginationControl($this->paginator, 'Sliding', 'pagination_control.phtml'); ?>

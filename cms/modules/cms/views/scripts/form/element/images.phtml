@@ -1,0 +1,22 @@
+<?php 
+$images = $this->element->getValue(); 
+$name = $this->element->getName();
+?>
+<ul class="imageList">
+	<?php if( is_array($images)): ?>
+		<?php foreach( $images as $key => $image): ?>
+			<li id="<?=$name.($key+1);?>">
+				<input type="hidden" name="<?=$name.'['.($key+1).']';?>" value="<?=$image?>"/>
+				<img alt="image" src="<?=$this->baseUrl($image);?>">
+				<ul style="display: none;">
+					<li>
+						<a class="image-modal" href="<?=$this->baseUrl($image);?>">Powiększ</a>
+						<a class="confirm-image-delete" href="#delete-image" onclick="confirm('Naprawdę chcesz usunąć zdjęcie?', deleteimage, $(this).attr('rel')); return false;" rel="<?=$name.($key+1);?>">Usuń</a>
+					</li>
+				</ul>
+			</li>
+		<?php endforeach; ?>
+	<?php endif; ?>
+</ul>
+
+<a id="add-image" href="#add-image" class="hr"><img alt="Dodaj" src="/admin/images/icons/add.png"/> Dodaj zdjęcie</a>
