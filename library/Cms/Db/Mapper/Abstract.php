@@ -89,7 +89,7 @@ abstract class Cms_Db_Mapper_Abstract
 	 * @return array 
 	 */
 	public function fetchAll($where = null, $order = null, $limit = null,
-		$page = null)
+		$page = null, $join = array(), $group = null, $having = null)
 	{
 		$select = $this->table()->select()->where('status <> 0');
 		if (!empty($where))
@@ -125,6 +125,25 @@ abstract class Cms_Db_Mapper_Abstract
 				$select->limit($limit);
 			}
 		}
+		
+		if(!empty($join))
+		{
+			// wtf - bez tego sie pieprzy
+			$select->__toString();
+			foreach($join as $table)
+			{
+				$select->join($table['table'], $table['cond'], $table['cols']);
+			}
+		}
+		if(!empty($group))
+		{
+			$select->group($group);
+		}
+		if(!empty($having))
+		{
+			$select->having($having);
+		}
+		
 		$result = $this->table()->fetchAll($select);
 		$entries = array();
 		foreach ($result as $row)

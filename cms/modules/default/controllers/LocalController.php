@@ -32,7 +32,7 @@ class LocalController extends Zend_Controller_Action
 	{
 		$miasto = $this->_getParam('miasto');
 		$mapper = new Cms_Db_Mapper_Category();
-		$main = $mapper->fetchAll('idParent = 0');
+		$main = $mapper->fetchAll('idParent = 0', 'priority ASC');
 		foreach ($main as $category)
 		{
 			if ($category->getName() == $miasto)

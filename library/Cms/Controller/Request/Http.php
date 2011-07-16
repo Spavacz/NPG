@@ -32,7 +32,7 @@ class Cms_Controller_Request_Http extends Zend_Controller_Request_Http
     public function getParams()
     {
     	$params = parent::getParams();
-    	if( preg_match('/application\/json/', $_SERVER['CONTENT_TYPE']) )
+    	if( isset($_SERVER['CONTENT_TYPE']) && preg_match('/application\/json/', $_SERVER['CONTENT_TYPE']) )
     	{
     		$params['jsonObj'] = json_decode(@file_get_contents("php://input"), true);
     	}

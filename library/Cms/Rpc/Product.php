@@ -22,7 +22,7 @@ class Cms_Rpc_Product
 			{
 				// tablica
 				$name = substr($param['name'], 0, $pos);
-				if (!is_array($data[$name]))
+				if (!isset($data[$name]) || !is_array($data[$name]))
 				{
 					$data[$name] = array();
 				}

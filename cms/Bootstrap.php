@@ -73,7 +73,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 		if (Zend_Auth::getInstance()->hasIdentity())
 		{
 			$userMapper = new Cms_Db_Mapper_User();
-			$userMapper->find(Zend_Auth::getInstance()->getIdentity(), $user);
+			$userMapper->find(Zend_Auth::getInstance()->getIdentity()->id, $user);
 		}
 		Zend_Registry::set('user', $user);
 	}

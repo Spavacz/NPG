@@ -1,4 +1,12 @@
-<h1>Wyniki wyszukiwania ofert <?php echo $this->type == 'sale' ? 'sprzedaży' : 'wynajmu'; ?></h1>
+<link rel="stylesheet" href="<?=$this->baseUrl('css/nivo-zoom.css');?>" type="text/css" media="screen" />
+<script src="<?=$this->baseUrl('js/jquery.nivo.zoom.js');?>" type="text/javascript"></script>
+
+<h1><?=$this->sectionName;?> - Wyniki wyszukiwania ofert <?php echo $this->type == 'sale' ? 'sprzedaży' : 'wynajmu'; ?></h1>
+<?php if($this->paginator->getCurrentItemCount() == 0) : ?>
+<h2>Brak ofert spełniających kryteria wyszukiwania</h2>
+<p><a href="<?=$this->baseUrl($this->advancedSearchUrl);?>">Zmień kryteria wyszukiwania</a></p>
+<?php else: ?>
+<p><a href="<?=$this->baseUrl($this->advancedSearchUrl);?>">Zmień kryteria wyszukiwania</a></p>
 <?php $start = ($this->paginator->getCurrentPageNumber() - 1) * $this->paginator->getItemCountPerPage() + 1;
     $end = $start + $this->paginator->getCurrentItemCount() - 1; ?>
 <h2>Wyświetlam trafienia od <?php echo "{$start} do {$end} z {$this->paginator->getTotalItemCount()}";?></h2>
@@ -6,8 +14,8 @@
     <?php foreach($this->products as $product) : ?>
         <li>
             <div class="list-image">
-                <a href="<?php echo $product->getUrl(); ?>">
-                    <img src="<?php echo $product->getMainImage('_thumbs'); ?>" alt="<?php echo $product->getName(); ?>"/>
+                <a href="<?=$product->getMainImage('_620x300');?>" class="nivoZoom">
+                    <img src="<?=$product->getMainImage('_thumbs');?>" alt="<?=$product->getName();?>"/>
                 </a>
             </div>
             <div class="list-info">
@@ -32,3 +40,8 @@
     <?php endforeach; ?>
 </ul>
 <?php echo $this->paginationControl($this->paginator, 'Sliding', 'pagination_control.phtml'); ?>
+
+<script type="text/javascript">
+$('body').nivoZoom();
+</script>
+<?php endif ?>

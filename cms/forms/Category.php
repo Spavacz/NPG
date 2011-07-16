@@ -77,6 +77,21 @@ class Cms_Form_Category extends Zend_Form
 			'filters'		=> array('StringTrim'),
 			'required'		=> false
 		));
+		
+		$this->addElement( 'text', 'priority', array(
+			'class'			=> 'small',
+			'decorators'	=> $this->inputDecorators,
+			'label'			=> 'Priorytet',
+			'filters'		=> array('StringTrim'),
+			'validators'	=> array(
+				array('StringLength', false, array(1,255))
+			)
+		));
+		
+		$sep2 = new Cms_Form_Element_Separator( 'sep2', array(
+			'decorators'	=> $this->sepDecorators
+		) );
+		$this->addElement( $sep2 );
 
 		$this->addElement( 'submit', 'save', array(
 			'class'			=> 'button big',

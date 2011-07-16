@@ -80,7 +80,8 @@ class Rest_CategoriesController extends Zend_Rest_Controller
 			'idParent' => $this->_getParam('idParent'),
 			'image' => $this->_getParam('image'),
 			'name' => $this->_getParam('name'),
-			'description' => $this->_getParam('description')
+			'description' => $this->_getParam('description'),
+			'priority' => $this->_getParam('priority')
 		);
 		$mapper = new Cms_Db_Mapper_Category();
 

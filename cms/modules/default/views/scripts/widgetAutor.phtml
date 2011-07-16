@@ -1,0 +1,17 @@
+<div class="agents-mini">
+	<h1>Agent Prowadzący</h1>
+	<a class="agents-img-mini"
+	   href="<?=$this->baseUrl('agenci#' . urlencode($this->agent->getSurname()));?>">
+		<img src="<?=$this->agent->getPhoto('thumbs');?>" alt="<?=$this->agent->getName(true);?>"/>
+	</a>
+
+	<h2>
+		<a href="<?=$this->baseUrl('agenci#' . urlencode($this->agent->getSurname()));?>">
+			<?=$this->agent->getName(true);?>
+		</a>
+	</h2><br/>
+	<?php if ($this->agent->getPhone()) : ?>
+	telefon: <?=$this->agent->getPhone();?><br/>
+	<?php endif; ?>
+	email: <?=$this->agent->getEmail();?>
+</div>

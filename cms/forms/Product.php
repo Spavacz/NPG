@@ -5,28 +5,39 @@ class Cms_Form_Product extends Zend_Form
 
 	protected $_category;
 
+	public static $subtypes = array(
+		'011' => 'Dom wolnostojący',
+		'012' => 'Dom rekreacyjny',
+		'013' => 'Dom bliźniak',
+		'014' => 'Dom szeregowy',
+		'015' => 'Dom kamienica',
+		'021' => 'Apartament',
+		'022' => 'Dobudówka',
+		'023' => 'Mieszkanie',
+		'031' => 'Działka',
+		'032' => 'Sklep',
+		'033' => 'Bióro',
+		'034' => 'Magazyn'
+    );
     public static $subtypeOptions = array(
-        '01' => 'Mieszkanie',
-        'Dom' => array(
-            '021' => '- wolnostojący',
-            '022' => '- rekreacyjny',
-            '023' => '- bliźniak',
-            '024' => '- szeregowy',
-            '025' => '- kamienica'
+        'Domy' => array(
+            '011' => 'Wolnostojący',
+            '012' => 'Rekreacyjny',
+            '013' => 'Bliźniak',
+            '014' => 'Szeregowy',
+            '015' => 'Kamienica'
         ),
-        'Działka' => array(
-            '031' => '- rolna',
-            '032' => '- handlowa',
-            '033' => '- rekreacyjna',
-            '034' => '- przemysłowa',
-            '035' => '- rzemieślnicza',
-            '036' => '- siedliskowa',
-            '037' => '- usługowa',
-            '038' => '- pod budowę'
-        ),
-        '04' => 'Biuro',
-        '05' => 'Sklep',
-        '06' => 'Magazyn'
+    	'Mieszkania' => array(
+    		'021' => 'Apartament',
+    		'022' => 'Dobudówka',
+    		'023' => 'Mieszkanie'
+    	),
+        'Obiekty' => array(
+            '031' => 'Działka',
+            '032' => 'Sklep',
+            '033' => 'Bióro',
+            '034' => 'Magazyn'
+        )
     );
 
 	public function __construct($category = 1)
@@ -103,6 +114,15 @@ class Cms_Form_Product extends Zend_Form
 			'label' => 'Opublikowana'
 		));
 
+		// sekcja serwisu
+		$this->addElement('select', 'section', array(
+			'label' => 'Sekcja serwisu',
+			'decorators' => $this->inputElementDecorators,
+			'class' => 'medium required',
+			'required' => true,
+			'multioptions' => Cms_Model_Item_Product::$sections
+		));
+		
         // subtyp
         $this->addElement('select', 'subtype', array(
 			'label' => 'Typ nieruchomości',
@@ -168,6 +188,34 @@ class Cms_Form_Product extends Zend_Form
 			'required' => true
 		));
 
+		$this->addElement('text', 'area', array(
+			'class' => 'required',
+			'decorators' => $this->inputElementDecorators,
+			'label' => 'Powierzchnia (m2)',
+			'filters' => array('Int'),
+			'validators' => array(
+				array('Int')
+			),
+			'required' => true
+		));
+		
+		$this->addElement('text', 'floor', array(
+			'class' => 'required',
+			'decorators' => $this->inputElementDecorators,
+			'label' => 'Piętro',
+			'filters' => array('Int'),
+			'validators' => array(
+				array('Int')
+			),
+			'required' => true
+		));
+		
+		// publiczna
+		$this->addElement('checkbox', 'newBuilding', array(
+			'decorators' => $this->inputElementDecorators,
+			'label' => 'Zbudowane po 2005'
+		));
+		
 		$this->addElement('textarea', 'description', array(
 			'id' => 'description',
 			'class' => 'full-width',

@@ -29,6 +29,7 @@ function drawList($parent)
 				$('#category-form>input[name|="image"]').val('');
 				$('#category-form>input[name|="idParent"]').val(activeId);
 				$('#category-form>input[name|="id"]').val('');
+				$('#category-form>input[name|="priority"]').val('');
 			} else {
 				jQuery.getJSON( '<?php echo $this->baseUrl('rest/categories/id'); ?>/' + id, function(data) {
 					if(data.success) {
@@ -37,6 +38,7 @@ function drawList($parent)
 						$('#category-form>input[name|="id"]').val(categoryData.id);
 						$('#category-form>input[name|="idParent"]').val(categoryData.idParent);
 						$('#category-form>input[name|="name"]').val(categoryData.name);
+						$('#category-form>input[name|="priority"]').val(categoryData.priority);
 						$('#category-form>textarea[name|="description"]').val(categoryData.description);
 						$('#category-form>div>input[name|="image"]').val(categoryData.image);
 						$('a.image-modal', '#category-form').attr('href',categoryData.image);

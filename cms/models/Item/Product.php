@@ -8,44 +8,62 @@
  */
 class Cms_Model_Item_Product extends Cms_Model_Item_Abstract
 {
+	/**
+	 * Sprzedaż i Wynajem
+	 * @var int
+	 */
 	const TYPE_SELL = 1;
 	const TYPE_RENT = 2;
 
-	public static $subtypes = array(
-		'0' => 'Wszystkie',
-		'01' => 'Mieszkanie',
-		'02' => 'Domy (wszystkie)',
-		'021' => 'Dom wolnostojący',
-		'022' => 'Dom rekreacyjny',
-		'023' => 'Dom bliźniak',
-		'024' => 'Dom szeregowy',
-		'025' => 'Kamienica',
-		'03' => 'Działki (wszystkie)',
-		'031' => 'Działka rolna',
-		'032' => 'Działka handlowa',
-		'033' => 'Działka rekreacyjna',
-		'034' => 'Działka przemysłowa',
-		'035' => 'Działka rzemieślnicza',
-		'036' => 'Działka siedliskowa',
-		'037' => 'Działka usługowa',
-		'038' => 'Działka pod budowę',
-		'04' => 'Biuro',
-		'05' => 'Sklep',
-		'06' => 'Magazyn'
+	/**
+	 * Działy serwisu
+	 * @var array
+	 */
+	public static $sections = array(
+		1 => 'Domy',
+		2 => 'Mieszkania',
+		3 => 'Obiekty'
 	);
+	
+	/**
+	 * Typy nieruchomości
+	 * @var array
+	 */
+	/*public static $subtypes = array(
+		'011' => 'Dom wolnostojący',
+		'012' => 'Dom rekreacyjny',
+		'013' => 'Dom bliźniak',
+		'014' => 'Dom szeregowy',
+		'015' => 'Dom kamienica',
+		'021' => 'Apartament',
+		'022' => 'Dobudówka',
+		'023' => 'Mieszkanie',
+		'031' => 'Działka',
+		'032' => 'Sklep',
+		'033' => 'Bióro',
+		'034' => 'Magazyn'
+    );*/
+	protected $_idAgent;
 	protected $_address;
 	protected $_price;
 	protected $_rooms;
+	protected $_area;
+	protected $_floor;
+	protected $_section;
 	protected $_type;
 	protected $_subtype;
 	protected $_idCategory;
 	protected $_idRootCategory;
 	protected $_superGallery;
 	protected $_sliderPriority;
+	protected $_newBuilding;
 	protected $_public;
 	protected $__images;
 	protected $__mainImage;
 	protected $__category;
+	protected $__agent;
+
+
 
 	public function setAddress($address)
 	{
@@ -70,9 +88,27 @@ class Cms_Model_Item_Product extends Cms_Model_Item_Abstract
 		}
 		return $this;
 	}
+	
+	/**
+	 * @return the $_section
+	 */
+	public function getSection() 
+	{
+		return $this->_section;
+	}
 
 	/**
-	 * 1 - sprzedaz 2 wynajem
+	 * @param int $_section
+	 */
+	public function setSection($_section) 
+	{
+		$this->_section = $_section;
+		return $this;
+	}
+
+	/**
+	 * 1 - sprzedaz
+	 * 2 - wynajem
 	 */
 	public function getType()
 	{
@@ -84,13 +120,39 @@ class Cms_Model_Item_Product extends Cms_Model_Item_Abstract
 		$this->_price = (float)$_price;
 		return $this;
 	}
+	
+	public function getArea()
+	{
+		return $this->_area;
+	}
+	
+	public function setArea($_area)
+	{
+		$this->_area = (int)$_area;
+		return $this;
+	}
+	
+	/**
+	 * @return int
+	 */
+	public function getFloor() {
+		return $this->_floor;
+	}
+
+	/**
+	 * @param int $_floor
+	 */
+	public function setFloor($_floor) {
+		$this->_floor = (int)$_floor;
+		return $this;
+	}
 
 	public function setSubtype($subtype)
 	{
-		if (key_exists($subtype, self::$subtypes))
-		{
+		//if (key_exists($subtype, self::$subtypes))
+		//{
 			$this->_subtype = $subtype;
-		}
+		//}
 		return $this;
 	}
 
@@ -100,7 +162,7 @@ class Cms_Model_Item_Product extends Cms_Model_Item_Abstract
 		{
 			return $this->_subtype;
 		}
-		return self::$subtypes[$this->_subtype];
+		return Cms_Form_Product::$subtypes[$this->_subtype];
 	}
 
 	public function getPrice()
@@ -173,6 +235,21 @@ class Cms_Model_Item_Product extends Cms_Model_Item_Abstract
 		}
 		return $this;
 	}
+	
+	/**
+	 * @return int
+	 */
+	public function getNewBuilding() {
+		return $this->_newBuilding;
+	}
+
+	/**
+	 * @param int $_newBuilding
+	 */
+	public function setNewBuilding($_newBuilding) {
+		$this->_newBuilding = $_newBuilding;
+		return $this;
+	}
 
 	public function getPublic()
 	{
@@ -202,8 +279,9 @@ class Cms_Model_Item_Product extends Cms_Model_Item_Abstract
 			case 'cms-edit':
 				return $baseUrl->baseUrl('cms/products/edit/id/' . $this->getId());
 			default:
-				return $baseUrl->baseUrl('oferta-' . ($this->getType() == self::TYPE_SELL ? 'sprzedazy'
-							: 'wynajmu') . '/' . urlencode($this->getName()));
+				return $baseUrl->baseUrl(strtolower(self::$sections[$this->getSection()])
+					. '/' . ($this->getType() == self::TYPE_SELL ? 'sprzedaz' : 'wynajem') 
+					. '/oferta/' . urlencode($this->getName()));
 		}
 	}
 
@@ -225,7 +303,13 @@ class Cms_Model_Item_Product extends Cms_Model_Item_Abstract
 		{
 			$mapper = new Cms_Db_Table_Images();
 			$images = $mapper->fetchAll(array('idParent = ?' => $this->getId()), null, 1)->toArray();
-			$this->__mainImage = $images[0]['filename'];
+			if(empty($images)) {
+				$this->__mainImage = '/images/noimg.png';	
+			}
+			else 
+			{
+				$this->__mainImage = $images[0]['filename'];
+			}
 		}
 		if ($thumb)
 		{
@@ -262,6 +346,37 @@ class Cms_Model_Item_Product extends Cms_Model_Item_Abstract
 		}
 
 		return $this->__images;
+	}
+
+	/**
+	 * @param int $idAgent
+	 * @return Cms_Model_Item_Product
+	 */
+	public function setIdAgent($idAgent)
+	{
+		$this->_idAgent = $idAgent;
+		return $this;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getIdAgent()
+	{
+		return $this->_idAgent;
+	}
+
+	/**
+	 * @return Cms_Model_Users
+	 */
+	public function getAgent()
+	{
+		if(is_null($this->__agent))
+		{
+			$mapper = new Cms_Db_Mapper_User();
+			$mapper->find($this->getIdAgent(), $this->__agent = new Cms_Model_User());
+		}
+		return $this->__agent;
 	}
 
 }

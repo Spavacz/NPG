@@ -11,6 +11,7 @@ class Cms_Model_Category extends Cms_Model_Item_Abstract
 
 	protected $_idParent;
 	protected $_image;
+	protected $_priority;
 	protected $__url;
 	protected $__parent;
 
@@ -23,6 +24,22 @@ class Cms_Model_Category extends Cms_Model_Item_Abstract
 	public function getIdParent()
 	{
 		return $this->_idParent;
+	}
+	
+	/**
+	 * @return int
+	 */
+	public function getPriority() {
+		return $this->_priority;
+	}
+
+	/**
+	 * @param int $_priority
+	 * @return Cms_Model_Category
+	 */
+	public function setPriority($_priority) {
+		$this->_priority = $_priority;
+		return $this;
 	}
 
 	public function setImage($image)

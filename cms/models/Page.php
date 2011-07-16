@@ -222,6 +222,9 @@ class Cms_Model_Page extends Cms_Model //Zend_Navigation_Page_Uri
 		{
 			$options = $this->getOptions();
 			$options['uri'] = $this->getHref();
+			if(strpos($options['uri'], 'http') !== false) {
+				$options['target'] = '_blank';
+			}
 			$nav = new Zend_Navigation_Page_Uri($options);
 			$this->setNavigation($nav);
 		}
@@ -259,7 +262,15 @@ class Cms_Model_Page extends Cms_Model //Zend_Navigation_Page_Uri
 		if (is_null($this->__href))
 		{
 			$helper = new Zend_View_Helper_BaseUrl();
-			$this->__href = $helper->baseUrl(trim($this->getUri(), '/'));
+			if($this->getUri()) {
+				if(strpos($this->getUri(), 'http') === false) {
+					$this->__href = $helper->baseUrl(trim($this->getUri(), '/'));
+				} else {
+					$this->__href = $this->getUri();
+				}
+			} else {
+				$this->__href = '';
+			}
 		}
 		return $this->__href;
 	}

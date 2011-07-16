@@ -5,6 +5,8 @@ class Cms_Controller_Plugin_Widgets extends Zend_Layout_Controller_Plugin_Layout
 
 	/**
 	 * dispatch widgets
+	 *
+	 * @param Zend_Controller_Request_Abstract $request
 	 */
 	public function postDispatch(Zend_Controller_Request_Abstract $request)
 	{
@@ -28,7 +30,7 @@ class Cms_Controller_Plugin_Widgets extends Zend_Layout_Controller_Plugin_Layout
 
 		$view = $layout->getView();
 		$page = $request->getParam('page');
-
+		/* @var $page Cms_Model_Page */
 		// ustawiam strone
 		if ($page instanceof Cms_Model_Page)
 		{
@@ -49,7 +51,8 @@ class Cms_Controller_Plugin_Widgets extends Zend_Layout_Controller_Plugin_Layout
 				{
 					// create widget
 					$className = $widget->getController();
-					$widgetObject = new $className($view, $widget->getParams(), $widget->getInstanceId());
+					$params = array_merge((array)$widget->getParams(), $request->getParams());
+					$widgetObject = new $className($view, $params, $widget->getInstanceId());
 					// action call
 					$widgetObject->{$widget->getAction()}();
 					// render to placeholder

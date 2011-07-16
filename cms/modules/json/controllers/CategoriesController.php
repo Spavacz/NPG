@@ -18,14 +18,21 @@ class Json_CategoriesController extends Zend_Controller_Action
 	public function autocompleteAction()
 	{
 		$query = $this->_getParam('search');
-		$mapper = new Cms_Db_Mapper_Lucene_Category();
+		$mapper = new Cms_Db_Mapper_Category();
+		$hits = $mapper->fetchAll(array('status = 1 AND idParent <> 0 AND name LIKE ?' => $query . '%'));
+		$result = array();
+		foreach($hits as $hit) {
+			/* @var $hit Cms_Model_Category */
+			$result[] = array($hit->getId(), $hit->getName());
+		}
+		/*$mapper = new Cms_Db_Mapper_Lucene_Category();
 		$hits = $mapper->find("{$query}*");
 		$result = array();
 		foreach($hits as $hit) {
 			if($hit->id_parent != 0) {
 				$result[] = array($hit->id_category, $hit->name);
 			}
-		}
+		}*/
 
 		header('Content-type: application/json');
 		echo json_encode($result);

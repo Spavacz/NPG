@@ -9,7 +9,7 @@ class Cms_Db_Mapper_Category extends Cms_Db_Mapper_Abstract
 
 	public static function factory($id)
 	{
-		if (!self::$__instances[$id] instanceof Cms_Model_Category)
+		if (!isset(self::$__instances[$id]) || !self::$__instances[$id] instanceof Cms_Model_Category)
 		{
 			$mapper = new self;
 			$mapper->find($id, self::$__instances[$id] = new Cms_Model_Category());

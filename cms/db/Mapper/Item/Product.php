@@ -9,7 +9,7 @@ class Cms_Db_Mapper_Item_Product extends Cms_Db_Mapper_Abstract
 	public function save(Cms_Model_Item_Product $product)
 	{
 		$parametersTable = new Cms_Db_Table_Product_Parameters();
-		
+
 		// id root category
 		$mapper = new Cms_Db_Mapper_Category();
 		$mapper->find($product->getIdCategory(), $category = new Cms_Model_Category());
@@ -17,29 +17,32 @@ class Cms_Db_Mapper_Item_Product extends Cms_Db_Mapper_Abstract
 		unset($category);
 		unset($mapper);
 
-		if (null === ($id = $product->getId()))
-		{
+		if (null === ($id = $product->getId())) {
 			$product->setCreated(date('Y-m-d H:i:s'));
+			$user = Zend_Registry::get('user');
+			
+			/* @var $user Cms_Model_User */
+			$product->setIdAgent($user->getId());
 		}
 		else
 		{
 			// czyszcze parametry
-			$parametersTable->delete($this->__db()->quoteInto('idProduct = ?', $id)); 
+			$parametersTable->delete($this->__db()->quoteInto('idProduct = ?', $id));
 		}
 
 		parent::save($product);
+		$id = $product->getId();
 
 		// parametry
 		foreach ($product->getParameters() as $parameter)
 		{
 			$value = trim($parameter->getValue());
-			if (!empty($value))
-			{
+			if (!empty($value)) {
 				$parametersTable->insert(array(
-					'idProduct' => $id,
-					'idParameter' => $parameter->getId(),
-					'value' => $value
-				));
+				                              'idProduct' => $id,
+				                              'idParameter' => $parameter->getId(),
+				                              'value' => $value
+				                         ));
 			}
 		}
 
@@ -51,8 +54,7 @@ class Cms_Db_Mapper_Item_Product extends Cms_Db_Mapper_Abstract
 		// porownujemy zmiany
 		foreach ($old as $k => $image)
 		{
-			if ($stay = array_search($image['filename'], $new))
-			{
+			if ($stay = array_search($image['filename'], $new)) {
 				unset($old[$k]);
 				unset($new[$stay]);
 			}
@@ -99,22 +101,33 @@ class Cms_Db_Mapper_Item_Product extends Cms_Db_Mapper_Abstract
 		return parent::purge($product);
 	}
 
-	public function findFast($cols, $where = null, $limit = null, $page = 1)
+	public function findFast($cols, $where = null, $limit = null, $page = 1, $join = array(), $group = null, $having = null)
 	{
 		$db = $this->getDbTable()->getAdapter();
 		$select = $db->select()
 				->from('products', $cols)
 				->where('status = 1');
-		if ($where)
-		{
+		if ($where) {
 			$select->where($where);
 		}
-		if ($limit && $page)
-		{
+		if ($limit && $page) {
 			$select->limitPage($page, $limit);
 		}
-		if (is_array($cols))
-		{
+		if (!empty($join)) {
+			foreach ($join as $table)
+			{
+				$select->join($table['table'], $table['cond'], $table['cols']);
+			}
+		}
+		if (!empty($group)) {
+			$select->group($group);
+		}
+		if (!empty($having)) {
+			$select->having($having);
+		}
+		//		echo $select->__toString();
+		//		die();
+		if (is_array($cols)) {
 			return $db->fetchAll($select);
 		}
 		return $db->fetchCol($select);

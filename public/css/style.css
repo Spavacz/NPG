@@ -226,12 +226,12 @@ body {
 
 #main-menu {
 	position: relative;
-	top: 140px;
+	padding-top: 140px;
 }
 #breadcrumbs {
     height: 20px;
     position: relative;
-    top: 140px;
+    /*top: 140px;*/
 	margin: 5px;
 }
 #breadcrumbs img {
@@ -287,12 +287,12 @@ ul.navigation li
 	position: relative;
 }
 
-ul.navigation a
+ul.navigation a, ul.navigation span
 {
 	position: relative;
 	display: block;
 
-	padding: 0 25px;
+	padding: 0 19px;
 	height: 60px;
 	text-align: center;
 	vertical-align: middle;
@@ -303,12 +303,12 @@ ul.navigation a
 	color: #fff;
 }
 
-ul.navigation a:hover {
+ul.navigation a:hover, ul.navigation span:hover {
 	background-image: url(../images/projekt/menu_hover_bg.png);
 	color: #9f1a39;
 }
 
-li.active>a {
+li.active>a, li.active>span {
 	background-image: url(../images/projekt/menu_hover_bg.png);
 	color: #9f1a39;
 }
@@ -549,10 +549,12 @@ a.nivo-prevNav {
 }
 ul.list>li {
     height: 100px;
+	clear: both;
 }
 .list-image {
     float: left;
     width: 120px;
+	margin: 5px;
 }
 .list-info {
     float: left;
@@ -598,6 +600,60 @@ ul.disc-list {
     display: block;
     float: left;
     width: 180px;
+}
+
+/* strona glowna */
+#header-sg {
+	margin: 5px; 0;
+	height: 150px;
+}
+#container-full {
+}
+.jimgMenu {
+	position:relative;
+	margin: 40px;
+	padding: 0px;
+	width: 900px;
+	height: 375px;
+	overflow: hidden;
+}
+.jimgMenu ul {
+	list-style: none;
+	margin: 0px;
+	padding: 0px;
+	display: block;
+	height: 375px;
+	position: relative;
+	}	
+.jimgMenu ul li {
+	width: 300px;
+	float: left;
+	display: block;
+	overflow: hidden;
+}
+.jimgMenu ul li a {
+	text-indent: -1000px;
+	background:#fff repeat scroll 0%;
+	border-right: 2px solid #fff;
+	cursor:pointer;
+	display:block;
+	overflow: hidden;
+	height: 375px;
+}
+.jimgMenu ul li#domy a {
+	background: url(../images/sg_domy.jpg) repeat scroll 0%; 
+}
+.jimgMenu ul li#mieszkania a {
+	background: url(../images/sg_mieszkania.jpg) repeat scroll 0%;
+}
+.jimgMenu ul li#obiekty a {
+	background: url(../images/sg_obiekty.jpg) repeat scroll 0%; 
+	border-right-style: none;
+}
+
+/* search slider */
+#price-block-slider {
+	display: none;
 }
 
 /*

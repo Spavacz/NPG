@@ -20,29 +20,31 @@ class Cms_Controller_Plugin_Router extends Zend_Controller_Plugin_Abstract
 		// dodaje reguly
 		foreach ($pagesMapper->fetchAll() as $page)
 		{
-			$params = array(
-				'controller' => $page->getController(),
-				'action' => $page->getAction(),
-				'page' => $page
-			);
-			$pageParams = $page->getParams();
-
-			$route = $page->getUri();
-			if (is_array($pageParams))
-			{
-				$params = array_merge($params, $pageParams);
-				foreach ($pageParams as $paramName => $v)
+			if($page->getUri()) {
+				$params = array(
+					'controller' => $page->getController(),
+					'action' => $page->getAction(),
+					'page' => $page
+				);
+				$pageParams = $page->getParams();
+	
+				$route = $page->getUri();
+				if (is_array($pageParams))
 				{
-					if(strpos($paramName, '_') !== 0)
+					$params = array_merge($params, $pageParams);
+					foreach ($pageParams as $paramName => $v)
 					{
-						$route .= ':' . $paramName . '/';
+						if(strpos($paramName, '_') !== 0)
+						{
+							$route .= ':' . $paramName . '/';
+						}
 					}
+					$route .= '*';
 				}
-				$route .= '*';
+				$router->addRoute($page->getUri(),
+					new Zend_Controller_Router_Route($route, $params)
+				);
 			}
-			$router->addRoute($page->getUri(),
-				new Zend_Controller_Router_Route($route, $params)
-			);
 		}
 
 		// regula rest

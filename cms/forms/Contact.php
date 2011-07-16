@@ -40,7 +40,7 @@ class Cms_Form_Contact extends Zend_Form
 			array(
 			'class' => 'medium required',
 			'decorators' => $this->inputGroupDecorators,
-			'label' => 'Imię',
+			'label' => 'Twoje imię',
 			'filters' => array('StringTrim'),
 			'validators' => array(
 				array('StringLength', false, array(1, 255))
@@ -52,7 +52,7 @@ class Cms_Form_Contact extends Zend_Form
 			array(
 			'class' => 'medium required',
 			'decorators' => $this->inputGroupDecorators,
-			'label' => 'Nazwisko',
+			'label' => 'Twoje nazwisko',
 			'filters' => array('StringTrim'),
 			'validators' => array(
 				array('StringLength', false, array(1, 255))
@@ -60,6 +60,18 @@ class Cms_Form_Contact extends Zend_Form
 			'required' => true
 		));
 
+		$this->addElement('text', 'phone',
+			array(
+			'class' => 'medium',
+			'decorators' => $this->inputGroupDecorators,
+			'label' => 'Numer telefonu',
+			'filters' => array('StringTrim'),
+			'validators' => array(
+				array('StringLength', false, array(1, 255))
+			),
+			'required' => true
+		));
+		
 		$this->addElement('text', 'email',
 			array(
 			'class' => 'medium required',
@@ -95,24 +107,12 @@ class Cms_Form_Contact extends Zend_Form
 			)
 		));
 
-		$this->addElement('text', 'phone',
-			array(
-			'class' => 'medium',
-			'decorators' => $this->inputGroupDecorators,
-			'label' => 'Telefon',
-			'filters' => array('StringTrim'),
-			'validators' => array(
-				array('StringLength', false, array(1, 255))
-			),
-			'required' => true
-		));
-
 		$this->addElement('textarea', 'message',
 			array(
 			'class' => 'full-width',
 			'decorators' => $this->inputElementDecorators,
 			'rows' => 4,
-			'label' => 'Twoja wiadomość',
+			'label' => 'Wiadomość',
 			'filters' => array('StringTrim'),
 			'validators' => array(
 				array('StringLength', false, array(0, 500))
