@@ -36,6 +36,7 @@ class Cms_Db_Mapper_Item_Product extends Cms_Db_Mapper_Abstract
 		// parametry
 		foreach ($product->getParameters() as $parameter)
 		{
+			/* @var $parameter Cms_Model_Item_Parameter_Abstract */
 			$value = trim($parameter->getValue());
 			if (!empty($value)) {
 				$parametersTable->insert(array(
@@ -86,6 +87,7 @@ class Cms_Db_Mapper_Item_Product extends Cms_Db_Mapper_Abstract
 	 * Uwaga - proces nieodwracalny!
 	 *
 	 * @param Cms_Model_Item_Product $product
+	 * @return boolean
 	 */
 	public function purge(Cms_Model_Item_Product $product)
 	{

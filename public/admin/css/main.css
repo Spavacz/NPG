@@ -1203,7 +1203,7 @@ input[type=text] {
 }
 input[type=password] {
 	padding: 4px;
-	width: 200px;
+	width: 280px;
 	border: 1px solid #CCC;
 }
 textarea {
@@ -2216,14 +2216,14 @@ div#validation-summary {
 div#login fieldset {
 	margin: 0;
 	padding: 10px 30px 0 140px;
-	background-image:url('../images/icons/user-login.png');
+	background-image:url('../../images/npglogo.png');
 	background-repeat:no-repeat;
-	background-position: 30px 30px;
+	background-position: 5px 5px;
 	clear:both;
 }
 div#login legend {
 	font-size: .86em;
-	padding: 16px 0px 3px 0px;
+	padding: 16px 0 3px 0;
 	color: #999;
 	margin: 0;
 	border: 0;

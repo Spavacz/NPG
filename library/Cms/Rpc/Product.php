@@ -3,6 +3,9 @@
 class Cms_Rpc_Product
 {
 
+	/**
+	 * @var Zend_Json_Server
+	 */
 	protected $_server;
 	protected $_message;
 	protected $_mapper;
@@ -113,6 +116,9 @@ class Cms_Rpc_Product
 		return 'Oferta "' . $product->getName() . '" usunięta';
 	}
 
+	/**
+	 * @return Cms_Db_Mapper_Item_Product
+	 */
 	protected function _mapper()
 	{
 		if (is_null($this->_mapper))
